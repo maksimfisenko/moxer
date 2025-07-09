@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/maksimfisenko/moxer/internal/handlers"
 )
 
 func Start() {
@@ -21,4 +22,5 @@ func Start() {
 }
 
 func setupRoutes(e *echo.Echo) {
+	handlers.NewHealthHandler(e)
 }
