@@ -2,6 +2,30 @@ basePath: /api/v1
 consumes:
 - application/json
 definitions:
+  requests.RegisterRequest:
+    description: Register request
+    properties:
+      email:
+        example: ""
+        type: string
+        x-order: "0"
+      password:
+        example: ""
+        type: string
+        x-order: "1"
+    required:
+    - email
+    - password
+    type: object
+  responses.ErrorResponse:
+    description: Error response
+    properties:
+      error:
+        example: error message
+        type: string
+    required:
+    - error
+    type: object
   responses.HealthcheckResponse:
     description: Healthcheck response
     properties:
@@ -10,6 +34,31 @@ definitions:
         type: string
     required:
     - status
+    type: object
+  responses.UserResponse:
+    description: User response without password
+    properties:
+      created_at:
+        example: ""
+        type: string
+        x-order: "2"
+      email:
+        example: ""
+        type: string
+        x-order: "1"
+      id:
+        example: ""
+        type: string
+        x-order: "0"
+      updated_at:
+        example: ""
+        type: string
+        x-order: "3"
+    required:
+    - created_at
+    - email
+    - id
+    - updated_at
     type: object
 host: localhost:8080
 info:
@@ -20,6 +69,37 @@ info:
   title: Moxer API
   version: "1.0"
 paths:
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register new user by given credentials (email, password)
+      operationId: register
+      parameters:
+      - description: Register request
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucessfully registered new user
+          schema:
+            $ref: '#/definitions/responses.UserResponse'
+        "400":
+          description: Failed to parse request body
+          schema:
+            $ref: '#/definitions/responses.ErrorResponse'
+        "500":
+          description: Failed to register
+          schema:
+            $ref: '#/definitions/responses.ErrorResponse'
+      summary: Register
+      tags:
+      - auth
   /healthz:
     get:
       description: Check if the application is up

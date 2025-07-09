@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/maksimfisenko/moxer/internal/repo/entities"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -21,5 +22,5 @@ func Connect() (*gorm.DB, error) {
 }
 
 func migrate(db *gorm.DB) error {
-	return db.AutoMigrate()
+	return db.AutoMigrate(&entities.User{})
 }

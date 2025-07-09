@@ -24,6 +24,53 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/register": {
+            "post": {
+                "description": "Register new user by given credentials (email, password)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register",
+                "operationId": "register",
+                "parameters": [
+                    {
+                        "description": "Register request",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully registered new user",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to parse request body",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to register",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/healthz": {
             "get": {
                 "description": "Check if the application is up",
@@ -47,6 +94,39 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "requests.RegisterRequest": {
+            "description": "Register request",
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "x-order": "0",
+                    "example": ""
+                },
+                "password": {
+                    "type": "string",
+                    "x-order": "1",
+                    "example": ""
+                }
+            }
+        },
+        "responses.ErrorResponse": {
+            "description": "Error response",
+            "type": "object",
+            "required": [
+                "error"
+            ],
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "error message"
+                }
+            }
+        },
         "responses.HealthcheckResponse": {
             "description": "Healthcheck response",
             "type": "object",
@@ -57,6 +137,38 @@ const docTemplate = `{
                 "status": {
                     "type": "string",
                     "example": "ok"
+                }
+            }
+        },
+        "responses.UserResponse": {
+            "description": "User response without password",
+            "type": "object",
+            "required": [
+                "created_at",
+                "email",
+                "id",
+                "updated_at"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "x-order": "0",
+                    "example": ""
+                },
+                "email": {
+                    "type": "string",
+                    "x-order": "1",
+                    "example": ""
+                },
+                "created_at": {
+                    "type": "string",
+                    "x-order": "2",
+                    "example": ""
+                },
+                "updated_at": {
+                    "type": "string",
+                    "x-order": "3",
+                    "example": ""
                 }
             }
         }

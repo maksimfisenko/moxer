@@ -6,8 +6,11 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/maksimfisenko/moxer/internal/handlers"
+	"github.com/maksimfisenko/moxer/internal/repo"
 	"github.com/maksimfisenko/moxer/internal/repo/db"
+	"github.com/maksimfisenko/moxer/internal/services"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	"gorm.io/gorm"
 )
 
 func Start() {
@@ -21,9 +24,7 @@ func Start() {
 		log.Fatalf("failed to connect to db: %v", err)
 	}
 
-	_ = db
-
-	setupRoutes(e)
+	setupRoutes(e, db)
 
 	log.Printf("starting server on %s...", port)
 	if err := e.Start(port); err != http.ErrServerClosed {
@@ -31,8 +32,12 @@ func Start() {
 	}
 }
 
-func setupRoutes(e *echo.Echo) {
+func setupRoutes(e *echo.Echo, db *gorm.DB) {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
+	usersRepo := repo.NewUsersRepo(db)
+	authService := services.NewAuthSerice(usersRepo)
+
 	handlers.NewHealthHandler(e)
+	handlers.NewAuthHandler(e, authService)
 }
