@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"github.com/maksimfisenko/moxer/internal/server"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	server.Start()
 }
