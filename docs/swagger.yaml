@@ -1,0 +1,15 @@
+basePath: /api/v1
+consumes:
+- application/json
+host: localhost:8080
+info:
+  contact:
+    email: fisenkomaksim.id@gmail.com
+    name: Maksim Fisenko
+  description: This is a backend API of the Moxer application.
+  title: Moxer API
+  version: "1.0"
+paths: {}
+produces:
+- application/json
+swagger: "2.0"

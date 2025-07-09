@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/maksimfisenko/moxer/internal/handlers"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 func Start() {
@@ -22,5 +23,7 @@ func Start() {
 }
 
 func setupRoutes(e *echo.Echo) {
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
+
 	handlers.NewHealthHandler(e)
 }
