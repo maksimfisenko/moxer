@@ -105,12 +105,12 @@ const docTemplate = `{
                 "email": {
                     "type": "string",
                     "x-order": "0",
-                    "example": ""
+                    "example": "fisenkomaksim.id@gmail.com"
                 },
                 "password": {
                     "type": "string",
                     "x-order": "1",
-                    "example": ""
+                    "example": "11111111"
                 }
             }
         },
@@ -153,22 +153,22 @@ const docTemplate = `{
                 "id": {
                     "type": "string",
                     "x-order": "0",
-                    "example": ""
+                    "example": "7975a7ec-bfda-42ad-831d-0b250277e402"
                 },
                 "email": {
                     "type": "string",
                     "x-order": "1",
-                    "example": ""
+                    "example": "fisenkomaksim.id@gmail.com"
                 },
                 "created_at": {
                     "type": "string",
                     "x-order": "2",
-                    "example": ""
+                    "example": "2025-07-09T18:43:23.239168298+03:00"
                 },
                 "updated_at": {
                     "type": "string",
                     "x-order": "3",
-                    "example": ""
+                    "example": "2025-07-09T18:43:23.239171581+03:00"
                 }
             }
         }

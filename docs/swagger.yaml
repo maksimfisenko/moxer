@@ -6,11 +6,11 @@ definitions:
     description: Register request
     properties:
       email:
-        example: ""
+        example: fisenkomaksim.id@gmail.com
         type: string
         x-order: "0"
       password:
-        example: ""
+        example: "11111111"
         type: string
         x-order: "1"
     required:
@@ -39,19 +39,19 @@ definitions:
     description: User response without password
     properties:
       created_at:
-        example: ""
+        example: "2025-07-09T18:43:23.239168298+03:00"
         type: string
         x-order: "2"
       email:
-        example: ""
+        example: fisenkomaksim.id@gmail.com
         type: string
         x-order: "1"
       id:
-        example: ""
+        example: 7975a7ec-bfda-42ad-831d-0b250277e402
         type: string
         x-order: "0"
       updated_at:
-        example: ""
+        example: "2025-07-09T18:43:23.239171581+03:00"
         type: string
         x-order: "3"
     required:
