@@ -1,6 +1,16 @@
 basePath: /api/v1
 consumes:
 - application/json
+definitions:
+  responses.HealthcheckResponse:
+    description: Healthcheck response
+    properties:
+      status:
+        example: ok
+        type: string
+    required:
+    - status
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -9,7 +19,21 @@ info:
   description: This is a backend API of the Moxer application.
   title: Moxer API
   version: "1.0"
-paths: {}
+paths:
+  /healthz:
+    get:
+      description: Check if the application is up
+      operationId: health-check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucessfully received response from server
+          schema:
+            $ref: '#/definitions/responses.HealthcheckResponse'
+      summary: Health Check
+      tags:
+      - health
 produces:
 - application/json
 swagger: "2.0"

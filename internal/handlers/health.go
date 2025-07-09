@@ -17,6 +17,15 @@ func NewHealthHandler(e *echo.Echo) *healthHandler {
 	return handler
 }
 
+// HealthCheck godoc
+//
+//	@Summary		Health Check
+//	@Description	Check if the application is up
+//	@ID				health-check
+//	@Tags			health
+//	@Produce		json
+//	@Success		200	{object}	responses.HealthcheckResponse "Sucessfully received response from server"
+//	@Router			/healthz [get]
 func (hh *healthHandler) HealthCheck(c echo.Context) error {
 	resp := responses.HealthcheckResponse{Status: "ok"}
 	return c.JSON(http.StatusOK, resp)
