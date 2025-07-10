@@ -1,0 +1,79 @@
+package repo
+
+import (
+	"testing"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/maksimfisenko/moxer/internal/repo/entities"
+	"github.com/stretchr/testify/assert"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+)
+
+func setupDB() (*gorm.DB, func()) {
+	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
+	if err != nil {
+		panic("falied to connect to sqlite db")
+	}
+
+	err = db.AutoMigrate(&entities.User{})
+	if err != nil {
+		panic("failed to migrate db")
+	}
+
+	cleanup := func() {
+		db.Exec("DELETE FROM users")
+	}
+
+	return db, cleanup
+}
+
+func TestUsersRepo_Create(t *testing.T) {
+	// Arange
+	db, cleanup := setupDB()
+	defer cleanup()
+
+	usersRepo := NewUsersRepo(db)
+
+	user := &entities.User{
+		Id:        uuid.New(),
+		Email:     "test@example.com",
+		Password:  "11111111",
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	// Act
+	createdUser, err := usersRepo.Create(user)
+
+	// Assert
+	assert.Nil(t, err)
+	assert.Equal(t, user.Id, createdUser.Id)
+	assert.Equal(t, user.Email, createdUser.Email)
+}
+
+func TestUsersRepo_findById(t *testing.T) {
+	// Arange
+	db, cleanup := setupDB()
+	defer cleanup()
+
+	usersRepo := NewUsersRepo(db)
+
+	user := &entities.User{
+		Id:        uuid.New(),
+		Email:     "test@example.com",
+		Password:  "11111111",
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	_, _ = usersRepo.Create(user)
+
+	// Act
+	fetchedUser, err := usersRepo.findById(user.Id)
+
+	// Assert
+	assert.Nil(t, err)
+	assert.Equal(t, user.Email, fetchedUser.Email)
+}
