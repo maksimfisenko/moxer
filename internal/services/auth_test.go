@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/maksimfisenko/moxer/internal/repo/entities"
 	"github.com/maksimfisenko/moxer/internal/services/dto"
+	"github.com/stretchr/testify/assert"
 )
 
 type MockUsersRepo struct {
@@ -22,6 +23,15 @@ func (r *MockUsersRepo) Create(user *entities.User) (*entities.User, error) {
 func (r *MockUsersRepo) FindByEmail(email string) (*entities.User, error) {
 	for _, user := range r.users {
 		if user.Email == email {
+			return user, nil
+		}
+	}
+	return nil, errors.New("user not found")
+}
+
+func (r *MockUsersRepo) FindById(userId uuid.UUID) (*entities.User, error) {
+	for _, user := range r.users {
+		if user.Id == userId {
 			return user, nil
 		}
 	}
@@ -87,4 +97,30 @@ func TestAuthService_Login(t *testing.T) {
 	if err == nil {
 		t.Error("expected error for non-existent user but got none")
 	}
+}
+
+func TestAuthService_GetById(t *testing.T) {
+	// Arrange
+	usersRepo := &MockUsersRepo{}
+	service := NewAuthSerice(usersRepo)
+
+	userDTO := &dto.UserDTO{
+		Id:        uuid.New(),
+		Email:     "test@example.com",
+		Password:  "11111111",
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	_, _ = service.Register(userDTO)
+
+	// Act
+	fetchedUser, err := service.GetById(userDTO.Id)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	// Assert
+	assert.NotNil(t, fetchedUser)
+	assert.Equal(t, userDTO.Email, fetchedUser.Email)
 }

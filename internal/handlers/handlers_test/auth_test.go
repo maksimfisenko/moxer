@@ -48,6 +48,14 @@ func (s *MockAuthService) Login(credentials *dto.UserCredentials) (*dto.Token, e
 	return nil, errors.New("user not found")
 }
 
+func (s *MockAuthService) GetById(userId uuid.UUID) (*dto.UserDTO, error) {
+	user, ok := s.users[userId]
+	if !ok {
+		return nil, errors.New("user not found")
+	}
+	return mapper.FromUserEntityToUserDTO(user), nil
+}
+
 func TestRegister(t *testing.T) {
 	mockAuthService := NewMockAuthService()
 	handler := handlers.NewAuthHandler(echo.New(), mockAuthService)
@@ -113,4 +121,38 @@ func TestLogin(t *testing.T) {
 	_ = json.Unmarshal(rec.Body.Bytes(), &resp)
 
 	assert.Equal(t, "12345", resp.Token)
+}
+
+func TestGetCurrentUser(t *testing.T) {
+	// Arrange
+	mockAuthService := NewMockAuthService()
+	handler := handlers.NewAuthHandler(echo.New(), mockAuthService)
+
+	registerReq := requests.RegisterRequest{
+		Email:    "email@example.com",
+		Password: "11111111",
+	}
+	userDTO := mapper2.FromRegisterRequestToUserDTO(&registerReq)
+
+	_, err := mockAuthService.Register(userDTO)
+	assert.NoError(t, err)
+
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/auth/me", nil)
+	rec := httptest.NewRecorder()
+	c := echo.New().NewContext(req, rec)
+	c.Set("userId", userDTO.Id.String())
+
+	// Act
+	if err := handler.GetCurrentUser(c); err != nil {
+		t.Fatal(err)
+	}
+
+	// Assert
+	assert.Equal(t, http.StatusOK, rec.Code)
+
+	var resp responses.UserResponse
+	_ = json.Unmarshal(rec.Body.Bytes(), &resp)
+
+	assert.NotNil(t, resp)
+	assert.Equal(t, userDTO.Email, resp.Email)
 }

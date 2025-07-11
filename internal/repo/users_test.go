@@ -53,7 +53,7 @@ func TestUsersRepo_Create(t *testing.T) {
 	assert.Equal(t, user.Email, createdUser.Email)
 }
 
-func TestUsersRepo_findById(t *testing.T) {
+func TestUsersRepo_FindById(t *testing.T) {
 	// Arange
 	db, cleanup := setupDB()
 	defer cleanup()
@@ -71,7 +71,7 @@ func TestUsersRepo_findById(t *testing.T) {
 	_, _ = usersRepo.Create(user)
 
 	// Act
-	fetchedUser, err := usersRepo.findById(user.Id)
+	fetchedUser, err := usersRepo.FindById(user.Id)
 
 	// Assert
 	assert.Nil(t, err)

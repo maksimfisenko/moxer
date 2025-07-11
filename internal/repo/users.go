@@ -19,10 +19,10 @@ func (ur *usersRepo) Create(user *entities.User) (*entities.User, error) {
 		return nil, err
 	}
 
-	return ur.findById(user.Id)
+	return ur.FindById(user.Id)
 }
 
-func (ur *usersRepo) findById(id uuid.UUID) (*entities.User, error) {
+func (ur *usersRepo) FindById(id uuid.UUID) (*entities.User, error) {
 	var user entities.User
 	if err := ur.db.First(&user, id).Error; err != nil {
 		return nil, err

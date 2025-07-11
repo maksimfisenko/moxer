@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/maksimfisenko/moxer/internal/services/dto"
 	"github.com/maksimfisenko/moxer/internal/services/jwt"
 	"github.com/maksimfisenko/moxer/internal/services/mapper"
@@ -43,4 +44,12 @@ func (as *authService) Login(credentials *dto.UserCredentials) (*dto.Token, erro
 	}
 
 	return &dto.Token{Token: token}, nil
+}
+
+func (as *authService) GetById(userId uuid.UUID) (*dto.UserDTO, error) {
+	user, err := as.usersRepo.FindById(userId)
+	if err != nil {
+		return nil, err
+	}
+	return mapper.FromUserEntityToUserDTO(user), nil
 }
