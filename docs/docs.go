@@ -24,6 +24,53 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "Login new user by given credentials (email, password)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "description": "Login request",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully registered new user",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Token"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to parse request body",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to login",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/register": {
             "post": {
                 "description": "Register new user by given credentials (email, password)",
@@ -94,6 +141,26 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "requests.LoginRequest": {
+            "description": "Login request",
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "x-order": "0",
+                    "example": "fisenkomaksim.id@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "x-order": "1",
+                    "example": "11111111"
+                }
+            }
+        },
         "requests.RegisterRequest": {
             "description": "Register request",
             "type": "object",
@@ -137,6 +204,20 @@ const docTemplate = `{
                 "status": {
                     "type": "string",
                     "example": "ok"
+                }
+            }
+        },
+        "responses.Token": {
+            "description": "JWT Token",
+            "type": "object",
+            "required": [
+                "token"
+            ],
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "x-order": "0",
+                    "example": "eyJhbGciOi..."
                 }
             }
         },

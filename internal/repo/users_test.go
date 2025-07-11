@@ -77,3 +77,28 @@ func TestUsersRepo_findById(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, user.Email, fetchedUser.Email)
 }
+
+func TestUsersRepo_FindByEmail(t *testing.T) {
+	// Arange
+	db, cleanup := setupDB()
+	defer cleanup()
+
+	usersRepo := NewUsersRepo(db)
+
+	user := &entities.User{
+		Id:        uuid.New(),
+		Email:     "test@example.com",
+		Password:  "11111111",
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	_, _ = usersRepo.Create(user)
+
+	// Act
+	fetchedUser, err := usersRepo.FindByEmail(user.Email)
+
+	// Assert
+	assert.Nil(t, err)
+	assert.Equal(t, user.Id, fetchedUser.Id)
+}

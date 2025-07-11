@@ -27,3 +27,16 @@ func FromUserDTOToUserResponse(dto *dto.UserDTO) *responses.UserResponse {
 		UpdatedAt: dto.UpdatedAt,
 	}
 }
+
+func FromLoginRequestToUserCredentialsDTO(req *requests.LoginRequest) *dto.UserCredentials {
+	return &dto.UserCredentials{
+		Email:    req.Email,
+		Password: req.Password,
+	}
+}
+
+func FromTokenDTOToTokenResponse(dto *dto.Token) *responses.Token {
+	return &responses.Token{
+		Token: dto.Token,
+	}
+}

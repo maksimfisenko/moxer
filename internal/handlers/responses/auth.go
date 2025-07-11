@@ -10,3 +10,8 @@ type UserResponse struct {
 	CreatedAt time.Time `extensions:"x-order=2" validate:"required" json:"created_at" example:"2025-07-09T18:43:23.239168298+03:00"`
 	UpdatedAt time.Time `extensions:"x-order=3" validate:"required" json:"updated_at" example:"2025-07-09T18:43:23.239171581+03:00"`
 }
+
+// @Description JWT Token
+type Token struct {
+	Token string `extensions:"x-order=0" validate:"required" json:"token" example:"eyJhbGciOi..."`
+}

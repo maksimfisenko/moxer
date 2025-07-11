@@ -3,6 +3,7 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/maksimfisenko/moxer/internal/handlers"
+	mapper2 "github.com/maksimfisenko/moxer/internal/handlers/mapper"
 	"github.com/maksimfisenko/moxer/internal/handlers/requests"
 	"github.com/maksimfisenko/moxer/internal/handlers/responses"
 	"github.com/maksimfisenko/moxer/internal/handlers/services"
@@ -35,6 +37,15 @@ func (s *MockAuthService) Register(userDTO *dto.UserDTO) (*dto.UserDTO, error) {
 	s.users[user.Id] = user
 
 	return mapper.FromUserEntityToUserDTO(user), nil
+}
+
+func (s *MockAuthService) Login(credentials *dto.UserCredentials) (*dto.Token, error) {
+	for _, user := range s.users {
+		if user.Email == credentials.Email && user.Password == credentials.Password {
+			return &dto.Token{Token: "12345"}, nil
+		}
+	}
+	return nil, errors.New("user not found")
 }
 
 func TestRegister(t *testing.T) {
@@ -63,4 +74,43 @@ func TestRegister(t *testing.T) {
 
 	assert.NotNil(t, resp.Id)
 	assert.Equal(t, registerReq.Email, resp.Email)
+}
+
+func TestLogin(t *testing.T) {
+	// Arrange
+	mockAuthService := NewMockAuthService()
+	handler := handlers.NewAuthHandler(echo.New(), mockAuthService)
+
+	registerReq := requests.RegisterRequest{
+		Email:    "email@example.com",
+		Password: "11111111",
+	}
+	userDTO := mapper2.FromRegisterRequestToUserDTO(&registerReq)
+
+	loginReq := requests.LoginRequest{
+		Email:    "email@example.com",
+		Password: "11111111",
+	}
+
+	_, err := mockAuthService.Register(userDTO)
+	assert.NoError(t, err)
+
+	loginReqJSON, _ := json.Marshal(loginReq)
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/auth/login", bytes.NewReader(loginReqJSON))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := echo.New().NewContext(req, rec)
+
+	// Act
+	if err := handler.Login(c); err != nil {
+		t.Fatal(err)
+	}
+
+	// Assert
+	assert.Equal(t, http.StatusOK, rec.Code)
+
+	var resp responses.Token
+	_ = json.Unmarshal(rec.Body.Bytes(), &resp)
+
+	assert.Equal(t, "12345", resp.Token)
 }

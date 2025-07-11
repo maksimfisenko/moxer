@@ -21,6 +21,7 @@ func NewAuthHandler(e *echo.Echo, authService services.AuthService) *authHandler
 	}
 
 	e.POST("/api/v1/auth/register", handler.Register)
+	e.POST("/api/v1/auth/login", handler.Login)
 
 	return handler
 }
@@ -59,4 +60,40 @@ func (ah *authHandler) Register(c echo.Context) error {
 	resp := mapper.FromUserDTOToUserResponse(dto)
 
 	return c.JSON(http.StatusCreated, resp)
+}
+
+// Login godoc
+//
+//	@Summary		Login
+//	@Description	Login new user by given credentials (email, password)
+//	@ID				login
+//	@Tags			auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			credentials	body		requests.LoginRequest	true	"Login request"
+//	@Success		200			{object}	responses.Token			"Sucessfully registered new user"
+//	@Failure		400			{object}	responses.ErrorResponse	"Failed to parse request body"
+//	@Failure		500			{object}	responses.ErrorResponse	"Failed to login"
+//	@Router			/auth/login [post]
+func (ah *authHandler) Login(c echo.Context) error {
+	var req requests.LoginRequest
+
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
+			Error: "failed to parse request body",
+		})
+	}
+
+	credentialsDTO := mapper.FromLoginRequestToUserCredentialsDTO(&req)
+
+	tokenDTO, err := ah.authService.Login(credentialsDTO)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.ErrorResponse{
+			Error: fmt.Sprintf("failed to register: %v", err),
+		})
+	}
+
+	resp := mapper.FromTokenDTOToTokenResponse(tokenDTO)
+
+	return c.JSON(http.StatusOK, resp)
 }

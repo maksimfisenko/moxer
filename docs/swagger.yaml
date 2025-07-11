@@ -2,6 +2,21 @@ basePath: /api/v1
 consumes:
 - application/json
 definitions:
+  requests.LoginRequest:
+    description: Login request
+    properties:
+      email:
+        example: fisenkomaksim.id@gmail.com
+        type: string
+        x-order: "0"
+      password:
+        example: "11111111"
+        type: string
+        x-order: "1"
+    required:
+    - email
+    - password
+    type: object
   requests.RegisterRequest:
     description: Register request
     properties:
@@ -34,6 +49,16 @@ definitions:
         type: string
     required:
     - status
+    type: object
+  responses.Token:
+    description: JWT Token
+    properties:
+      token:
+        example: eyJhbGciOi...
+        type: string
+        x-order: "0"
+    required:
+    - token
     type: object
   responses.UserResponse:
     description: User response without password
@@ -69,6 +94,37 @@ info:
   title: Moxer API
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login new user by given credentials (email, password)
+      operationId: login
+      parameters:
+      - description: Login request
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/requests.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucessfully registered new user
+          schema:
+            $ref: '#/definitions/responses.Token'
+        "400":
+          description: Failed to parse request body
+          schema:
+            $ref: '#/definitions/responses.ErrorResponse'
+        "500":
+          description: Failed to login
+          schema:
+            $ref: '#/definitions/responses.ErrorResponse'
+      summary: Login
+      tags:
+      - auth
   /auth/register:
     post:
       consumes:
