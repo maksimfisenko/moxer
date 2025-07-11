@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/maksimfisenko/moxer/internal/handlers"
+	"github.com/maksimfisenko/moxer/internal/handlers/middleware"
 	"github.com/maksimfisenko/moxer/internal/repo"
 	"github.com/maksimfisenko/moxer/internal/repo/db"
 	"github.com/maksimfisenko/moxer/internal/services"
@@ -25,6 +26,8 @@ func Start() {
 	}
 
 	setupRoutes(e, db)
+
+	e.Use(middleware.JWTMiddleware())
 
 	log.Printf("starting server on %s...", port)
 	if err := e.Start(port); err != http.ErrServerClosed {
