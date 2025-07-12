@@ -71,6 +71,42 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/me": {
+            "get": {
+                "description": "Get current user by JWT token in Authorization header",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Get current user",
+                "operationId": "me",
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully fetched current user",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to parse token",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to fetch current user",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/register": {
             "post": {
                 "description": "Register new user by given credentials (email, password)",
@@ -138,9 +174,96 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/templates": {
+            "get": {
+                "description": "Get all templates of certain user by given JWT token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templates"
+                ],
+                "summary": "Get user's templates",
+                "operationId": "get-all-for-user",
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched user's templates",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.Template"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to parse token",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to fetch user's templates",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new template with provided request body and user id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templates"
+                ],
+                "summary": "Create template",
+                "operationId": "create-template",
+                "parameters": [
+                    {
+                        "description": "Create template request",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CreateTemplateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully created new template",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Template"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to parse request body or token",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to create new template",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "requests.CreateTemplateRequest": {
+            "type": "object"
+        },
         "requests.LoginRequest": {
             "description": "Login request",
             "type": "object",
@@ -204,6 +327,44 @@ const docTemplate = `{
                 "status": {
                     "type": "string",
                     "example": "ok"
+                }
+            }
+        },
+        "responses.Template": {
+            "description": "Template response",
+            "type": "object",
+            "required": [
+                "content",
+                "created_at",
+                "id",
+                "name",
+                "updated_at"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "x-order": "0",
+                    "example": "7975a7ec-bfda-42ad-831d-0b250277e402"
+                },
+                "name": {
+                    "type": "string",
+                    "x-order": "1",
+                    "example": "user"
+                },
+                "content": {
+                    "type": "object",
+                    "additionalProperties": {},
+                    "x-order": "2"
+                },
+                "created_at": {
+                    "type": "string",
+                    "x-order": "3",
+                    "example": "2025-07-09T18:43:23.239168298+03:00"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "x-order": "4",
+                    "example": "2025-07-09T18:43:23.239171581+03:00"
                 }
             }
         },

@@ -2,6 +2,8 @@ basePath: /api/v1
 consumes:
 - application/json
 definitions:
+  requests.CreateTemplateRequest:
+    type: object
   requests.LoginRequest:
     description: Login request
     properties:
@@ -49,6 +51,36 @@ definitions:
         type: string
     required:
     - status
+    type: object
+  responses.Template:
+    description: Template response
+    properties:
+      content:
+        additionalProperties: {}
+        type: object
+        x-order: "2"
+      created_at:
+        example: "2025-07-09T18:43:23.239168298+03:00"
+        type: string
+        x-order: "3"
+      id:
+        example: 7975a7ec-bfda-42ad-831d-0b250277e402
+        type: string
+        x-order: "0"
+      name:
+        example: user
+        type: string
+        x-order: "1"
+      updated_at:
+        example: "2025-07-09T18:43:23.239171581+03:00"
+        type: string
+        x-order: "4"
+    required:
+    - content
+    - created_at
+    - id
+    - name
+    - updated_at
     type: object
   responses.Token:
     description: JWT Token
@@ -125,6 +157,30 @@ paths:
       summary: Login
       tags:
       - auth
+  /auth/me:
+    get:
+      consumes:
+      - application/json
+      description: Get current user by JWT token in Authorization header
+      operationId: me
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucessfully fetched current user
+          schema:
+            $ref: '#/definitions/responses.UserResponse'
+        "400":
+          description: Failed to parse token
+          schema:
+            $ref: '#/definitions/responses.ErrorResponse'
+        "500":
+          description: Failed to fetch current user
+          schema:
+            $ref: '#/definitions/responses.ErrorResponse'
+      summary: Get current user
+      tags:
+      - auth
   /auth/register:
     post:
       consumes:
@@ -170,6 +226,62 @@ paths:
       summary: Health Check
       tags:
       - health
+  /templates:
+    get:
+      consumes:
+      - application/json
+      description: Get all templates of certain user by given JWT token
+      operationId: get-all-for-user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully fetched user's templates
+          schema:
+            items:
+              $ref: '#/definitions/responses.Template'
+            type: array
+        "400":
+          description: Failed to parse token
+          schema:
+            $ref: '#/definitions/responses.ErrorResponse'
+        "500":
+          description: Failed to fetch user's templates
+          schema:
+            $ref: '#/definitions/responses.ErrorResponse'
+      summary: Get user's templates
+      tags:
+      - templates
+    post:
+      consumes:
+      - application/json
+      description: Create a new template with provided request body and user id
+      operationId: create-template
+      parameters:
+      - description: Create template request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreateTemplateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucessfully created new template
+          schema:
+            $ref: '#/definitions/responses.Template'
+        "400":
+          description: Failed to parse request body or token
+          schema:
+            $ref: '#/definitions/responses.ErrorResponse'
+        "500":
+          description: Failed to create new template
+          schema:
+            $ref: '#/definitions/responses.ErrorResponse'
+      summary: Create template
+      tags:
+      - templates
 produces:
 - application/json
 swagger: "2.0"

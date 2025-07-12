@@ -36,9 +36,9 @@ func NewTemplatesHandler(e *echo.Echo, templatesService services.TemplatesServic
 //	@Accept			json
 //	@Produce		json
 //	@Param			data	body		requests.CreateTemplateRequest	true	"Create template request"
-//	@Success		200			{object}	responses.Template		"Sucessfully created new template"
-//	@Failure		400			{object}	responses.ErrorResponse		"Failed to parse request body or token"
-//	@Failure		500			{object}	responses.ErrorResponse		"Failed to create new template"
+//	@Success		200		{object}	responses.Template				"Sucessfully created new template"
+//	@Failure		400		{object}	responses.ErrorResponse			"Failed to parse request body or token"
+//	@Failure		500		{object}	responses.ErrorResponse			"Failed to create new template"
 //	@Router			/templates [post]
 func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 	userIdRaw := c.Get("userId").(string)
@@ -72,7 +72,7 @@ func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 	return c.JSON(http.StatusCreated, resp)
 }
 
-// CreateTemplate godoc
+// GetAllForUser godoc
 //
 //	@Summary		Get user's templates
 //	@Description	Get all templates of certain user by given JWT token
@@ -80,9 +80,9 @@ func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 //	@Tags			templates
 //	@Accept			json
 //	@Produce		json
-//	@Success		200			{object}	[]responses.Template		"Sucessfully fetched user's templates"
-//	@Failure		400			{object}	responses.ErrorResponse		"Failed to parse token"
-//	@Failure		500			{object}	responses.ErrorResponse		"Failed to fetch user's templates"
+//	@Success		200	{array}		responses.Template		"Successfully fetched user's templates"
+//	@Failure		400	{object}	responses.ErrorResponse	"Failed to parse token"
+//	@Failure		500	{object}	responses.ErrorResponse	"Failed to fetch user's templates"
 //	@Router			/templates [get]
 func (th *templatesHandler) GetAllForUser(c echo.Context) error {
 	userIdRaw := c.Get("userId").(string)
