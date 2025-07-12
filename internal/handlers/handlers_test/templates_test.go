@@ -38,8 +38,9 @@ func (s *MockTemplatesService) Create(templateDTP *dto.Template) (*dto.Template,
 }
 
 func TestCreateTemplate(t *testing.T) {
+	e := echo.New()
 	mockTemplatesService := NewMockTemplatesService()
-	handler := handlers.NewTemplatesHandler(echo.New(), mockTemplatesService)
+	handler := handlers.NewTemplatesHandler(e, mockTemplatesService)
 
 	templateReq := requests.CreateTemplateRequest{
 		Name: "user",
@@ -53,7 +54,7 @@ func TestCreateTemplate(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/templates", bytes.NewReader(templateReqJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
-	c := echo.New().NewContext(req, rec)
+	c := e.NewContext(req, rec)
 	c.Set("userId", uuid.New().String())
 
 	if err := handler.CreateTemplate(c); err != nil {
@@ -63,7 +64,8 @@ func TestCreateTemplate(t *testing.T) {
 	assert.Equal(t, http.StatusCreated, rec.Code)
 
 	var resp responses.Template
-	_ = json.Unmarshal(rec.Body.Bytes(), &resp)
+	err := json.Unmarshal(rec.Body.Bytes(), &resp)
+	assert.NoError(t, err)
 
 	assert.NotNil(t, resp.Id)
 	assert.Equal(t, templateReq.Name, resp.Name)
