@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/google/uuid"
 	"github.com/maksimfisenko/moxer/internal/services/dto"
 	"github.com/maksimfisenko/moxer/internal/services/mapper"
 	"github.com/maksimfisenko/moxer/internal/services/repo"
@@ -22,4 +23,13 @@ func (ts *templatesService) Create(templateDTO *dto.Template) (*dto.Template, er
 	}
 
 	return mapper.FromTemplateEntityToTemplateDTO(entity), nil
+}
+
+func (ts *templatesService) GetAllForUser(userID uuid.UUID) ([]*dto.Template, error) {
+	templates, err := ts.templatesRepo.FindAllForUser(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return mapper.FromTemplateEntityListToTemplateDTOList(templates), nil
 }

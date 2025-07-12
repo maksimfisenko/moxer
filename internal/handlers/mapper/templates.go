@@ -29,3 +29,11 @@ func FromTemplateDTOToTemplateResponse(dto *dto.Template) *responses.Template {
 		UpdatedAt: dto.UpdatedAt,
 	}
 }
+
+func FromTemplateDTOListToTemplateResponseList(dtoList []*dto.Template) []*responses.Template {
+	responsses := make([]*responses.Template, len(dtoList))
+	for i, dto := range dtoList {
+		responsses[i] = FromTemplateDTOToTemplateResponse(dto)
+	}
+	return responsses
+}

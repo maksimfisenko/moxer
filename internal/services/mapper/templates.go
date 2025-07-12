@@ -26,3 +26,11 @@ func FromTemplateEntityToTemplateDTO(entity *entities.Template) *dto.Template {
 		UpdatedAt: entity.UpdatedAt,
 	}
 }
+
+func FromTemplateEntityListToTemplateDTOList(entities []*entities.Template) []*dto.Template {
+	dtoList := make([]*dto.Template, len(entities))
+	for i, entity := range entities {
+		dtoList[i] = FromTemplateEntityToTemplateDTO(entity)
+	}
+	return dtoList
+}

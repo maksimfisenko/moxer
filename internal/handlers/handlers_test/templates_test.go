@@ -37,7 +37,18 @@ func (s *MockTemplatesService) Create(templateDTP *dto.Template) (*dto.Template,
 	return mapper.FromTemplateEntityToTemplateDTO(template), nil
 }
 
+func (s *MockTemplatesService) GetAllForUser(userId uuid.UUID) ([]*dto.Template, error) {
+	templates := []*entities.Template{}
+	for _, template := range s.templates {
+		if template.UserId == userId {
+			templates = append(templates, template)
+		}
+	}
+	return mapper.FromTemplateEntityListToTemplateDTOList(templates), nil
+}
+
 func TestCreateTemplate(t *testing.T) {
+	// Arrange
 	e := echo.New()
 	mockTemplatesService := NewMockTemplatesService()
 	handler := handlers.NewTemplatesHandler(e, mockTemplatesService)
@@ -57,10 +68,12 @@ func TestCreateTemplate(t *testing.T) {
 	c := e.NewContext(req, rec)
 	c.Set("userId", uuid.New().String())
 
+	// Act
 	if err := handler.CreateTemplate(c); err != nil {
 		t.Fatal(err)
 	}
 
+	// Assert
 	assert.Equal(t, http.StatusCreated, rec.Code)
 
 	var resp responses.Template
@@ -70,4 +83,75 @@ func TestCreateTemplate(t *testing.T) {
 	assert.NotNil(t, resp.Id)
 	assert.Equal(t, templateReq.Name, resp.Name)
 	assert.Equal(t, templateReq.Content, resp.Content)
+}
+
+func TestGetAllForUser(t *testing.T) {
+	// Arrange
+	e := echo.New()
+	mockTemplatesService := NewMockTemplatesService()
+	handler := handlers.NewTemplatesHandler(e, mockTemplatesService)
+
+	template1Req := requests.CreateTemplateRequest{
+		Name: "user_1",
+		Content: map[string]any{
+			"email":   "{{email}}",
+			"country": "{{country}}",
+		},
+	}
+
+	template2Req := requests.CreateTemplateRequest{
+		Name: "user_2",
+		Content: map[string]any{
+			"email":   "{{email}}",
+			"country": "{{country}}",
+		},
+	}
+
+	template1ReqJSON, _ := json.Marshal(template1Req)
+	template2ReqJSON, _ := json.Marshal(template2Req)
+
+	userId := uuid.New().String()
+
+	req := httptest.NewRequest(http.MethodPost, "/api/v1/templates", bytes.NewReader(template1ReqJSON))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.Set("userId", userId)
+
+	if err := handler.CreateTemplate(c); err != nil {
+		t.Fatal(err)
+	}
+
+	req = httptest.NewRequest(http.MethodPost, "/api/v1/templates", bytes.NewReader(template2ReqJSON))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec = httptest.NewRecorder()
+	c = e.NewContext(req, rec)
+	c.Set("userId", userId)
+
+	if err := handler.CreateTemplate(c); err != nil {
+		t.Fatal(err)
+	}
+
+	req = httptest.NewRequest(http.MethodGet, "/api/v1/templates", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec = httptest.NewRecorder()
+	c = e.NewContext(req, rec)
+	c.Set("userId", userId)
+
+	// Act
+	if err := handler.GetAllForUser(c); err != nil {
+		t.Fatal(err)
+	}
+
+	// Assert
+	assert.Equal(t, http.StatusOK, rec.Code)
+
+	var resp []responses.Template
+	err := json.Unmarshal(rec.Body.Bytes(), &resp)
+	assert.NoError(t, err)
+
+	assert.NotNil(t, resp[0].Id)
+	assert.NotNil(t, resp[1].Id)
+	assert.Equal(t, template1Req.Name, resp[0].Name)
+	assert.Equal(t, template2Req.Content, resp[1].Content)
 }

@@ -22,6 +22,7 @@ func NewTemplatesHandler(e *echo.Echo, templatesService services.TemplatesServic
 	}
 
 	e.POST("/api/v1/templates", handler.CreateTemplate)
+	e.GET("/api/v1/templates", handler.GetAllForUser)
 
 	return handler
 }
@@ -69,4 +70,38 @@ func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 	resp := mapper.FromTemplateDTOToTemplateResponse(dto)
 
 	return c.JSON(http.StatusCreated, resp)
+}
+
+// CreateTemplate godoc
+//
+//	@Summary		Get user's templates
+//	@Description	Get all templates of certain user by given JWT token
+//	@ID				get-all-for-user
+//	@Tags			templates
+//	@Accept			json
+//	@Produce		json
+//	@Success		200			{object}	[]responses.Template		"Sucessfully fetched user's templates"
+//	@Failure		400			{object}	responses.ErrorResponse		"Failed to parse token"
+//	@Failure		500			{object}	responses.ErrorResponse		"Failed to fetch user's templates"
+//	@Router			/templates [get]
+func (th *templatesHandler) GetAllForUser(c echo.Context) error {
+	userIdRaw := c.Get("userId").(string)
+
+	userId, err := uuid.Parse(userIdRaw)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
+			Error: "failed to parse token",
+		})
+	}
+
+	dtoList, err := th.templatesService.GetAllForUser(userId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.ErrorResponse{
+			Error: fmt.Sprintf("failed to fetch user's templates: %v", err),
+		})
+	}
+
+	resp := mapper.FromTemplateDTOListToTemplateResponseList(dtoList)
+
+	return c.JSON(http.StatusOK, resp)
 }

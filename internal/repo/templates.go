@@ -29,3 +29,17 @@ func (tr *templatesRepo) findById(id uuid.UUID) (*entities.Template, error) {
 	}
 	return &template, nil
 }
+
+func (tr *templatesRepo) FindAllForUser(userID uuid.UUID) ([]*entities.Template, error) {
+	var templates []entities.Template
+	if err := tr.db.Where("user_id = ?", userID).Find(&templates).Error; err != nil {
+		return nil, err
+	}
+
+	templs := make([]*entities.Template, len(templates))
+	for i, templ := range templates {
+		templs[i] = &templ
+	}
+
+	return templs, nil
+}
