@@ -22,5 +22,8 @@ func Connect() (*gorm.DB, error) {
 }
 
 func migrate(db *gorm.DB) error {
-	return db.AutoMigrate(&entities.User{})
+	return db.AutoMigrate(
+		&entities.User{},
+		&entities.Template{},
+	)
 }

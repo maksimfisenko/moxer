@@ -17,7 +17,10 @@ func setupDB() (*gorm.DB, func()) {
 		panic("falied to connect to sqlite db")
 	}
 
-	err = db.AutoMigrate(&entities.User{})
+	err = db.AutoMigrate(
+		&entities.User{},
+		&entities.Template{},
+	)
 	if err != nil {
 		panic("failed to migrate db")
 	}

@@ -39,8 +39,12 @@ func setupRoutes(e *echo.Echo, db *gorm.DB) {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	usersRepo := repo.NewUsersRepo(db)
+	templatesRepo := repo.NewTemplatesRepo(db)
+
 	authService := services.NewAuthSerice(usersRepo)
+	templatesService := services.NewTemplatesService(templatesRepo)
 
 	handlers.NewHealthHandler(e)
 	handlers.NewAuthHandler(e, authService)
+	handlers.NewTemplatesHandler(e, templatesService)
 }
