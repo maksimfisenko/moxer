@@ -8,4 +8,5 @@ import (
 type TemplatesRepo interface {
 	Create(template *entities.Template) (*entities.Template, error)
 	FindAllForUser(userID uuid.UUID) ([]*entities.Template, error)
+	FindById(id uuid.UUID) (*entities.Template, error)
 }

@@ -8,4 +8,5 @@ import (
 type TemplatesService interface {
 	Create(templateDTO *dto.Template) (*dto.Template, error)
 	GetAllForUser(userID uuid.UUID) ([]*dto.Template, error)
+	GenerateData(templateId uuid.UUID, count int) (*dto.GeneratedData, error)
 }

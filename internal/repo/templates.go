@@ -19,10 +19,10 @@ func (tr *templatesRepo) Create(template *entities.Template) (*entities.Template
 		return nil, err
 	}
 
-	return tr.findById(template.Id)
+	return tr.FindById(template.Id)
 }
 
-func (tr *templatesRepo) findById(id uuid.UUID) (*entities.Template, error) {
+func (tr *templatesRepo) FindById(id uuid.UUID) (*entities.Template, error) {
 	var template entities.Template
 	if err := tr.db.First(&template, id).Error; err != nil {
 		return nil, err

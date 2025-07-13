@@ -86,7 +86,7 @@ func TestTemplatesRepo_findById(t *testing.T) {
 	_, _ = templatesRepo.Create(template)
 
 	// Act
-	fetchedTemplate, err := templatesRepo.findById(template.Id)
+	fetchedTemplate, err := templatesRepo.FindById(template.Id)
 
 	// Assert
 	assert.Nil(t, err)

@@ -1,8 +1,11 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/maksimfisenko/moxer/internal/services/dto"
+	"github.com/maksimfisenko/moxer/internal/services/generator"
 	"github.com/maksimfisenko/moxer/internal/services/mapper"
 	"github.com/maksimfisenko/moxer/internal/services/repo"
 )
@@ -32,4 +35,19 @@ func (ts *templatesService) GetAllForUser(userID uuid.UUID) ([]*dto.Template, er
 	}
 
 	return mapper.FromTemplateEntityListToTemplateDTOList(templates), nil
+}
+
+func (ts *templatesService) GenerateData(templateId uuid.UUID, count int) (*dto.GeneratedData, error) {
+	template, err := ts.templatesRepo.FindById(templateId)
+	if err != nil {
+		return nil, err
+	}
+
+	if count < 1 || count > 10 {
+		return nil, errors.New("invalid count value")
+	}
+
+	return &dto.GeneratedData{
+		Data: generator.GenerateData(template.Content, count),
+	}, nil
 }

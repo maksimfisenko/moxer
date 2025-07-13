@@ -37,3 +37,9 @@ func FromTemplateDTOListToTemplateResponseList(dtoList []*dto.Template) []*respo
 	}
 	return responsses
 }
+
+func FromGeneratedDataDTOToGeneratedDataResponse(dto *dto.GeneratedData) *responses.GeneratedData {
+	return &responses.GeneratedData{
+		Data: dto.Data,
+	}
+}

@@ -23,6 +23,7 @@ func NewTemplatesHandler(e *echo.Echo, templatesService services.TemplatesServic
 
 	e.POST("/api/v1/templates", handler.CreateTemplate)
 	e.GET("/api/v1/templates", handler.GetAllForUser)
+	e.POST("/api/v1/templates/:id/generate", handler.GenerateData)
 
 	return handler
 }
@@ -104,4 +105,44 @@ func (th *templatesHandler) GetAllForUser(c echo.Context) error {
 	resp := mapper.FromTemplateDTOListToTemplateResponseList(dtoList)
 
 	return c.JSON(http.StatusOK, resp)
+}
+
+// GenerateData godoc
+//
+//	@Summary		Generate data
+//	@Description	Generate data from template
+//	@ID				generate-data
+//	@Tags			templates
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{array}		responses.Template		"Successfully generated data from template"
+//	@Failure		400	{object}	responses.ErrorResponse	"Failed to parse param / request"
+//	@Failure		500	{object}	responses.ErrorResponse	"Failed to generate data"
+//	@Router			/templates/:id/generate [post]
+func (th *templatesHandler) GenerateData(c echo.Context) error {
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
+			Error: "failed to parse template id param",
+		})
+	}
+
+	var req requests.GenerateDataRequest
+
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
+			Error: "failed to parse request body",
+		})
+	}
+
+	dto, err := th.templatesService.GenerateData(id, req.Count)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.ErrorResponse{
+			Error: fmt.Sprintf("failed to generate data: %v", err),
+		})
+	}
+
+	resp := mapper.FromGeneratedDataDTOToGeneratedDataResponse(dto)
+
+	return c.JSON(http.StatusCreated, resp)
 }

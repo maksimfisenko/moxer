@@ -14,3 +14,7 @@ type Template struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type GeneratedData struct {
+	Data []map[string]any
+}
