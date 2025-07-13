@@ -1,14 +1,14 @@
 package handlers
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"github.com/maksimfisenko/moxer/internal/errorsx"
 	"github.com/maksimfisenko/moxer/internal/handlers/mapper"
 	"github.com/maksimfisenko/moxer/internal/handlers/requests"
-	"github.com/maksimfisenko/moxer/internal/handlers/responses"
 	"github.com/maksimfisenko/moxer/internal/handlers/services"
 )
 
@@ -43,29 +43,27 @@ func NewTemplatesHandler(e *echo.Echo, templatesService services.TemplatesServic
 //	@Router			/templates [post]
 func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 	userIdRaw := c.Get("userId").(string)
-
 	userId, err := uuid.Parse(userIdRaw)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
-			Error: "failed to parse token",
-		})
+		return errorsx.ErrInvalidTokenHTTP
 	}
 
 	var req requests.CreateTemplateRequest
-
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
-			Error: "failed to parse request body",
-		})
+		return errorsx.ErrInvalidRequestBodyHTTP
 	}
 
 	dto := mapper.FromCreateTemplateRequestToTemplateDTO(&req, userId)
 
 	dto, err = th.templatesService.Create(dto)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.ErrorResponse{
-			Error: fmt.Sprintf("failed to create new template: %v", err),
-		})
+		switch {
+		case errorsx.Is(err, "user_not_found"):
+			return errorsx.ErrUserNotFoundHTTP
+		default:
+			log.Printf("unexpected error: %v", err)
+			return errorsx.ErrInternalServerHTTP
+		}
 	}
 
 	resp := mapper.FromTemplateDTOToTemplateResponse(dto)
@@ -87,19 +85,15 @@ func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 //	@Router			/templates [get]
 func (th *templatesHandler) GetAllForUser(c echo.Context) error {
 	userIdRaw := c.Get("userId").(string)
-
 	userId, err := uuid.Parse(userIdRaw)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
-			Error: "failed to parse token",
-		})
+		return errorsx.ErrInvalidTokenHTTP
 	}
 
 	dtoList, err := th.templatesService.GetAllForUser(userId)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.ErrorResponse{
-			Error: fmt.Sprintf("failed to fetch user's templates: %v", err),
-		})
+		log.Printf("unexpected error: %v", err)
+		return errorsx.ErrInternalServerHTTP
 	}
 
 	resp := mapper.FromTemplateDTOListToTemplateResponseList(dtoList)
@@ -120,26 +114,25 @@ func (th *templatesHandler) GetAllForUser(c echo.Context) error {
 //	@Failure		500	{object}	responses.ErrorResponse	"Failed to generate data"
 //	@Router			/templates/:id/generate [post]
 func (th *templatesHandler) GenerateData(c echo.Context) error {
-	id, err := uuid.Parse(c.Param("id"))
+	templateId, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
-			Error: "failed to parse template id param",
-		})
+		return errorsx.ErrInvalidTokenHTTP
 	}
 
 	var req requests.GenerateDataRequest
-
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
-			Error: "failed to parse request body",
-		})
+		return errorsx.ErrInvalidRequestBodyHTTP
 	}
 
-	dto, err := th.templatesService.GenerateData(id, req.Count)
+	dto, err := th.templatesService.GenerateData(templateId, req.Count)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.ErrorResponse{
-			Error: fmt.Sprintf("failed to generate data: %v", err),
-		})
+		switch {
+		case errorsx.Is(err, "template_not_found"):
+			return errorsx.ErrTemplateNotFoundHTTP
+		default:
+			log.Printf("unexpected error: %v", err)
+			return errorsx.ErrInternalServerHTTP
+		}
 	}
 
 	resp := mapper.FromGeneratedDataDTOToGeneratedDataResponse(dto)

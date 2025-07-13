@@ -1,14 +1,14 @@
 package handlers
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"github.com/maksimfisenko/moxer/internal/errorsx"
 	"github.com/maksimfisenko/moxer/internal/handlers/mapper"
 	"github.com/maksimfisenko/moxer/internal/handlers/requests"
-	"github.com/maksimfisenko/moxer/internal/handlers/responses"
 	"github.com/maksimfisenko/moxer/internal/handlers/services"
 )
 
@@ -43,20 +43,21 @@ func NewAuthHandler(e *echo.Echo, authService services.AuthService) *authHandler
 //	@Router			/auth/register [post]
 func (ah *authHandler) Register(c echo.Context) error {
 	var req requests.RegisterRequest
-
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
-			Error: "failed to parse request body",
-		})
+		return errorsx.ErrInvalidRequestBodyHTTP
 	}
 
 	dto := mapper.FromRegisterRequestToUserDTO(&req)
 
 	dto, err := ah.authService.Register(dto)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.ErrorResponse{
-			Error: fmt.Sprintf("failed to register: %v", err),
-		})
+		switch {
+		case errorsx.Is(err, "user_exists"):
+			return errorsx.ErrUserExistsHTTP
+		default:
+			log.Printf("unexpected error: %v", err)
+			return errorsx.ErrInternalServerHTTP
+		}
 	}
 
 	resp := mapper.FromUserDTOToUserResponse(dto)
@@ -79,20 +80,21 @@ func (ah *authHandler) Register(c echo.Context) error {
 //	@Router			/auth/login [post]
 func (ah *authHandler) Login(c echo.Context) error {
 	var req requests.LoginRequest
-
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
-			Error: "failed to parse request body",
-		})
+		return errorsx.ErrInvalidRequestBodyHTTP
 	}
 
 	credentialsDTO := mapper.FromLoginRequestToUserCredentialsDTO(&req)
 
 	tokenDTO, err := ah.authService.Login(credentialsDTO)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.ErrorResponse{
-			Error: fmt.Sprintf("failed to register: %v", err),
-		})
+		switch {
+		case errorsx.Is(err, "user_not_found"):
+			return errorsx.ErrUserNotFoundHTTP
+		default:
+			log.Printf("unexpected error: %v", err)
+			return errorsx.ErrInternalServerHTTP
+		}
 	}
 
 	resp := mapper.FromTokenDTOToTokenResponse(tokenDTO)
@@ -114,19 +116,20 @@ func (ah *authHandler) Login(c echo.Context) error {
 //	@Router			/auth/me [get]
 func (ah *authHandler) GetCurrentUser(c echo.Context) error {
 	userIdRaw := c.Get("userId").(string)
-
 	userId, err := uuid.Parse(userIdRaw)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, responses.ErrorResponse{
-			Error: "failed to parse token",
-		})
+		return errorsx.ErrInvalidTokenHTTP
 	}
 
 	userDTO, err := ah.authService.GetById(userId)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.ErrorResponse{
-			Error: fmt.Sprintf("failed to fetch user: %v", err),
-		})
+		switch {
+		case errorsx.Is(err, "user_not_found"):
+			return errorsx.ErrUserNotFoundHTTP
+		default:
+			log.Printf("unexpected error: %v", err)
+			return errorsx.ErrInternalServerHTTP
+		}
 	}
 
 	resp := mapper.FromUserDTOToUserResponse(userDTO)

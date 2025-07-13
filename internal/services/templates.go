@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"github.com/maksimfisenko/moxer/internal/errorsx"
 	"github.com/maksimfisenko/moxer/internal/services/dto"
 	"github.com/maksimfisenko/moxer/internal/services/generator"
 	"github.com/maksimfisenko/moxer/internal/services/mapper"
@@ -21,8 +22,12 @@ func NewTemplatesService(templatesRepo repo.TemplatesRepo) *templatesService {
 func (ts *templatesService) Create(templateDTO *dto.Template) (*dto.Template, error) {
 	entity := mapper.FromTemplateDTOToTemplateEntity(templateDTO)
 
-	if _, err := ts.templatesRepo.Create(entity); err != nil {
-		return nil, err
+	_, err := ts.templatesRepo.Create(entity)
+	if err != nil {
+		if errors.Is(err, errorsx.ErrInvalidUserId) {
+			return nil, errorsx.New("user_not_found", "user with given id not found", nil)
+		}
+		return nil, errorsx.New("internal_error", "failed to create template", err)
 	}
 
 	return mapper.FromTemplateEntityToTemplateDTO(entity), nil
@@ -31,7 +36,7 @@ func (ts *templatesService) Create(templateDTO *dto.Template) (*dto.Template, er
 func (ts *templatesService) GetAllForUser(userID uuid.UUID) ([]*dto.Template, error) {
 	templates, err := ts.templatesRepo.FindAllForUser(userID)
 	if err != nil {
-		return nil, err
+		return nil, errorsx.New("internal_error", "failed to fetch templates for user", err)
 	}
 
 	return mapper.FromTemplateEntityListToTemplateDTOList(templates), nil
@@ -40,11 +45,10 @@ func (ts *templatesService) GetAllForUser(userID uuid.UUID) ([]*dto.Template, er
 func (ts *templatesService) GenerateData(templateId uuid.UUID, count int) (*dto.GeneratedData, error) {
 	template, err := ts.templatesRepo.FindById(templateId)
 	if err != nil {
-		return nil, err
+		return nil, errorsx.New("internal_error", "failed to find template by id", err)
 	}
-
-	if count < 1 || count > 10 {
-		return nil, errors.New("invalid count value")
+	if template == nil {
+		return nil, errorsx.New("template_not_found", "template with given id not found", nil)
 	}
 
 	return &dto.GeneratedData{

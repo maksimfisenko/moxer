@@ -3,7 +3,6 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -11,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"github.com/maksimfisenko/moxer/internal/errorsx"
 	"github.com/maksimfisenko/moxer/internal/handlers"
 	"github.com/maksimfisenko/moxer/internal/handlers/requests"
 	"github.com/maksimfisenko/moxer/internal/handlers/responses"
@@ -53,7 +53,7 @@ func (s *MockTemplatesService) GetAllForUser(userId uuid.UUID) ([]*dto.Template,
 func (s *MockTemplatesService) GenerateData(templateId uuid.UUID, count int) (*dto.GeneratedData, error) {
 	templ, ok := s.templates[templateId]
 	if !ok {
-		return nil, errors.New("template not found")
+		return nil, errorsx.New("template_not_found", "template with given id not found", nil)
 	}
 
 	return &dto.GeneratedData{
@@ -202,8 +202,6 @@ func TestGenerateData(t *testing.T) {
 	assert.NoError(t, err)
 
 	url := fmt.Sprintf("/api/v1/templates/%s/generate", templ.Id)
-
-	fmt.Println(url)
 
 	genReq := requests.GenerateDataRequest{
 		Count: 3,
