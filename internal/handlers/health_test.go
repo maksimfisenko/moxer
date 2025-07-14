@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/labstack/echo/v4"
-	"github.com/maksimfisenko/moxer/internal/handlers"
 	"github.com/maksimfisenko/moxer/internal/handlers/responses"
 	"github.com/stretchr/testify/assert"
 )
@@ -15,7 +14,7 @@ import (
 func TestHealthCheck(t *testing.T) {
 	// Arrange
 	e := echo.New()
-	handler := handlers.NewHealthHandler(e)
+	handler := NewHealthHandler(e)
 
 	req := httptest.NewRequest(http.MethodGet, "/api/v1/healthz", nil)
 	rec := httptest.NewRecorder()

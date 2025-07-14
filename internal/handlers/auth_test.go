@@ -10,7 +10,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maksimfisenko/moxer/internal/handlers"
 	mapper2 "github.com/maksimfisenko/moxer/internal/handlers/mapper"
 	"github.com/maksimfisenko/moxer/internal/handlers/requests"
 	"github.com/maksimfisenko/moxer/internal/handlers/responses"
@@ -60,7 +59,7 @@ func TestRegister(t *testing.T) {
 	// Arrange
 	e := echo.New()
 	mockAuthService := NewMockAuthService()
-	handler := handlers.NewAuthHandler(e, mockAuthService)
+	handler := NewAuthHandler(e, mockAuthService)
 
 	registerReq := requests.RegisterRequest{
 		Email:    "email@example.com",
@@ -93,7 +92,7 @@ func TestLogin(t *testing.T) {
 	// Arrange
 	e := echo.New()
 	mockAuthService := NewMockAuthService()
-	handler := handlers.NewAuthHandler(e, mockAuthService)
+	handler := NewAuthHandler(e, mockAuthService)
 
 	registerReq := requests.RegisterRequest{
 		Email:    "email@example.com",
@@ -134,7 +133,7 @@ func TestGetCurrentUser(t *testing.T) {
 	// Arrange
 	e := echo.New()
 	mockAuthService := NewMockAuthService()
-	handler := handlers.NewAuthHandler(e, mockAuthService)
+	handler := NewAuthHandler(e, mockAuthService)
 
 	registerReq := requests.RegisterRequest{
 		Email:    "email@example.com",

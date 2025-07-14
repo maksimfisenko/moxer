@@ -11,7 +11,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/maksimfisenko/moxer/internal/errorsx"
-	"github.com/maksimfisenko/moxer/internal/handlers"
 	"github.com/maksimfisenko/moxer/internal/handlers/requests"
 	"github.com/maksimfisenko/moxer/internal/handlers/responses"
 	"github.com/maksimfisenko/moxer/internal/handlers/services"
@@ -65,7 +64,7 @@ func TestCreateTemplate(t *testing.T) {
 	// Arrange
 	e := echo.New()
 	mockTemplatesService := NewMockTemplatesService()
-	handler := handlers.NewTemplatesHandler(e, mockTemplatesService)
+	handler := NewTemplatesHandler(e, mockTemplatesService)
 
 	templateReq := requests.CreateTemplateRequest{
 		Name: "user",
@@ -103,7 +102,7 @@ func TestGetAllForUser(t *testing.T) {
 	// Arrange
 	e := echo.New()
 	mockTemplatesService := NewMockTemplatesService()
-	handler := handlers.NewTemplatesHandler(e, mockTemplatesService)
+	handler := NewTemplatesHandler(e, mockTemplatesService)
 
 	template1Req := requests.CreateTemplateRequest{
 		Name: "user_1",
@@ -174,7 +173,7 @@ func TestGenerateData(t *testing.T) {
 	// Arrange
 	e := echo.New()
 	mockTemplatesService := NewMockTemplatesService()
-	handler := handlers.NewTemplatesHandler(e, mockTemplatesService)
+	handler := NewTemplatesHandler(e, mockTemplatesService)
 
 	templateReq := requests.CreateTemplateRequest{
 		Name: "user",
