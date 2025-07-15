@@ -2,6 +2,7 @@ package repo
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/maksimfisenko/moxer/internal/errorsx"
@@ -20,7 +21,7 @@ func NewUsersRepo(db *gorm.DB) *usersRepo {
 func (ur *usersRepo) Create(user *entities.User) (*entities.User, error) {
 	err := ur.db.Create(user).Error
 	if err != nil {
-		if errors.Is(err, gorm.ErrDuplicatedKey) {
+		if strings.Contains(err.Error(), "duplicate key value") {
 			return nil, errorsx.ErrEmailAlreadyExists
 		}
 		return nil, err
