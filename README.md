@@ -55,7 +55,7 @@ Moxer will output:
 ## :closed_lock_with_key: API endpoints ```(api/v1)```
 
 | Method | Path                      | Description                     | Auth Required |
-|--------|---------------------------|---------------------------------|--------------------|
+|:------:|:-------------------------:|:-------------------------------:|:------------------:|
 | GET    | `/swagger/index.html`     | Swagger UI for the API          | :x:                |
 | GET    | `/healthz`                | Check availability of the app   | :x:                |
 | POST   | `/auth/register`          | Register a new user             | :x:                |
@@ -76,4 +76,4 @@ Moxer will output:
 
 ## :page_facing_up: License
 
-This project is licensed under the MIT License. See ```LICENSE``` for details.
+This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
