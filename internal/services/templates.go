@@ -20,9 +20,17 @@ func NewTemplatesService(templatesRepo repo.TemplatesRepo) *templatesService {
 }
 
 func (ts *templatesService) Create(templateDTO *dto.Template) (*dto.Template, error) {
+	storedTemplate, err := ts.templatesRepo.FindByNameAndUserId(templateDTO.Name, templateDTO.UserId)
+	if err != nil {
+		return nil, errorsx.New("internal_error", "failed to find template by name and userId", err)
+	}
+	if storedTemplate != nil {
+		return nil, errorsx.New("template_exists", "template with given name and user id already exists", nil)
+	}
+
 	entity := mapper.FromTemplateDTOToTemplateEntity(templateDTO)
 
-	_, err := ts.templatesRepo.Create(entity)
+	_, err = ts.templatesRepo.Create(entity)
 	if err != nil {
 		if errors.Is(err, errorsx.ErrInvalidUserId) {
 			return nil, errorsx.New("user_not_found", "user with given id not found", nil)

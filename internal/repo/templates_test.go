@@ -149,3 +149,44 @@ func TestTemplatesRepo_FindALlForUser(t *testing.T) {
 	assert.Equal(t, template1.Name, fetchedTemplates[0].Name)
 	assert.Equal(t, template2.Content, fetchedTemplates[1].Content)
 }
+
+func TestTemplatesRepo_FindByNameAndUserId(t *testing.T) {
+	// Arange
+	db, cleanup := setupDB()
+	defer cleanup()
+
+	usersRepo := NewUsersRepo(db)
+	templatesRepo := NewTemplatesRepo(db)
+
+	user := &entities.User{
+		Id:        uuid.New(),
+		Email:     "test@example.com",
+		Password:  "11111111",
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	_, _ = usersRepo.Create(user)
+
+	template := &entities.Template{
+		Id:   uuid.New(),
+		Name: "test_template",
+		Content: map[string]any{
+			"email":   "{{email}}",
+			"country": "{{country}}",
+		},
+		UserId:    user.Id,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	_, _ = templatesRepo.Create(template)
+
+	// Act
+	fetchedTemplate, err := templatesRepo.FindByNameAndUserId(template.Name, template.UserId)
+
+	// Assert
+	assert.Nil(t, err)
+	assert.Equal(t, template.Id, fetchedTemplate.Id)
+	assert.Equal(t, template.Content, fetchedTemplate.Content)
+}

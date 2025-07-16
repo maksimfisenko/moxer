@@ -58,6 +58,8 @@ func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 	dto, err = th.templatesService.Create(dto)
 	if err != nil {
 		switch {
+		case errorsx.Is(err, "template_exists"):
+			return errorsx.ErrTemplateExistsHTTP
 		case errorsx.Is(err, "user_not_found"):
 			return errorsx.ErrUserNotFoundHTTP
 		default:

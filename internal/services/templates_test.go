@@ -1,7 +1,6 @@
 package services
 
 import (
-	"errors"
 	"testing"
 	"time"
 
@@ -36,7 +35,16 @@ func (r *MockTemplatesRepo) FindById(id uuid.UUID) (*entities.Template, error) {
 			return templ, nil
 		}
 	}
-	return nil, errors.New("template not found")
+	return nil, nil
+}
+
+func (r *MockTemplatesRepo) FindByNameAndUserId(name string, userId uuid.UUID) (*entities.Template, error) {
+	for _, templ := range r.templates {
+		if templ.Name == name && templ.UserId == userId {
+			return templ, nil
+		}
+	}
+	return nil, nil
 }
 
 func TestTemplatesService_Create(t *testing.T) {

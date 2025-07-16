@@ -61,3 +61,17 @@ func (tr *templatesRepo) FindAllForUser(userID uuid.UUID) ([]*entities.Template,
 
 	return templs, nil
 }
+
+func (tr *templatesRepo) FindByNameAndUserId(name string, userId uuid.UUID) (*entities.Template, error) {
+	var template entities.Template
+
+	err := tr.db.Where("name = ? AND user_id = ?", name, userId).First(&template).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &template, nil
+}

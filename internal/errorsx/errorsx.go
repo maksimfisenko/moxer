@@ -19,6 +19,7 @@ var (
 	ErrUserNotFoundHTTP       = echo.NewHTTPError(http.StatusBadRequest, "user not found")
 	ErrInvalidTokenHTTP       = echo.NewHTTPError(http.StatusBadRequest, "invalid authentication token")
 	ErrTemplateNotFoundHTTP   = echo.NewHTTPError(http.StatusBadRequest, "template not found")
+	ErrTemplateExistsHTTP     = echo.NewHTTPError(http.StatusBadRequest, "template with given name already exists")
 )
 
 type Errorx struct {
