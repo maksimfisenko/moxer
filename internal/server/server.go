@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/maksimfisenko/moxer/internal/config"
 	"github.com/maksimfisenko/moxer/internal/handlers"
 	"github.com/maksimfisenko/moxer/internal/handlers/middleware"
 	"github.com/maksimfisenko/moxer/internal/repo"
@@ -15,7 +16,7 @@ import (
 )
 
 func Start() {
-	port := ":8080"
+	config.Load()
 
 	e := echo.New()
 
@@ -29,8 +30,8 @@ func Start() {
 
 	e.Use(middleware.JWTMiddleware())
 
-	log.Printf("starting server on %s...", port)
-	if err := e.Start(port); err != http.ErrServerClosed {
+	log.Printf("starting server on %s...", config.Cfg.Port)
+	if err := e.Start(config.Cfg.Port); err != http.ErrServerClosed {
 		log.Fatalf("fatal error: %v", err)
 	}
 }

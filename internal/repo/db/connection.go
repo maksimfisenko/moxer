@@ -1,13 +1,14 @@
 package db
 
 import (
+	"github.com/maksimfisenko/moxer/internal/config"
 	"github.com/maksimfisenko/moxer/internal/repo/entities"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func Connect() (*gorm.DB, error) {
-	dsn := "host=localhost user=maksimfisenko password=0000 dbname=moxer port=5432 sslmode=disable TimeZone=Europe/Moscow"
+	dsn := config.Cfg.DB.DSN()
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {

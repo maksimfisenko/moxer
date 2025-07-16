@@ -2,13 +2,11 @@ package jwt
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-)
-
-const (
-	secret = "70fff2fdf9be90828790a6429c92d5fa67521dfbe031e63f6cd2fca94a8deb5621db6a5d12d941729c0c47162831aa57"
+	"github.com/maksimfisenko/moxer/internal/config"
 )
 
 func GenerateToken(userId string) (string, error) {
@@ -20,7 +18,9 @@ func GenerateToken(userId string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString([]byte(secret))
+	fmt.Println(config.Cfg.JWT.Secret)
+
+	return token.SignedString([]byte(config.Cfg.JWT.Secret))
 }
 
 func ParseToken(tokenStr string) (string, error) {
@@ -28,7 +28,7 @@ func ParseToken(tokenStr string) (string, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
 		}
-		return []byte(secret), nil
+		return []byte(config.Cfg.JWT.Secret), nil
 	})
 
 	if err != nil || !token.Valid {

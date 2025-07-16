@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/maksimfisenko/moxer/internal/config"
 	"github.com/maksimfisenko/moxer/internal/repo/entities"
 	"github.com/maksimfisenko/moxer/internal/services/dto"
 	"github.com/stretchr/testify/assert"
@@ -61,6 +62,7 @@ func TestAuthService_Register(t *testing.T) {
 }
 
 func TestAuthService_Login(t *testing.T) {
+	config.Load()
 	usersRepo := &MockUsersRepo{}
 	service := NewAuthSerice(usersRepo)
 
