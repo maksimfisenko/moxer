@@ -73,6 +73,7 @@ Moxer will output:
 - [Google UUID](https://github.com/google/uuid)
 - [Testify](https://github.com/stretchr/testify)
 - [swaggo/swag](https://github.com/swaggo/swag)
+- [crypto/bcrypt](https://pkg.go.dev/golang.org/x/crypto/bcrypt)
 
 ## :page_facing_up: License
 
