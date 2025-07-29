@@ -18,11 +18,11 @@ func TestTemplatesRepo_Create(t *testing.T) {
 	templatesRepo := NewTemplatesRepo(db)
 
 	user := &entities.User{
-		Id:        uuid.New(),
-		Email:     "test@example.com",
-		Password:  "11111111",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Id:           uuid.New(),
+		Email:        "test@example.com",
+		PasswordHash: "password_hash",
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 
 	_, err := usersRepo.Create(user)
@@ -62,11 +62,11 @@ func TestTemplatesRepo_findById(t *testing.T) {
 	templatesRepo := NewTemplatesRepo(db)
 
 	user := &entities.User{
-		Id:        uuid.New(),
-		Email:     "test@example.com",
-		Password:  "11111111",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Id:           uuid.New(),
+		Email:        "test@example.com",
+		PasswordHash: "password_hash",
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 
 	_, _ = usersRepo.Create(user)
@@ -104,11 +104,11 @@ func TestTemplatesRepo_FindALlForUser(t *testing.T) {
 	templatesRepo := NewTemplatesRepo(db)
 
 	user := &entities.User{
-		Id:        uuid.New(),
-		Email:     "test@example.com",
-		Password:  "11111111",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Id:           uuid.New(),
+		Email:        "test@example.com",
+		PasswordHash: "password_hash",
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 
 	_, _ = usersRepo.Create(user)
@@ -159,11 +159,11 @@ func TestTemplatesRepo_FindByNameAndUserId(t *testing.T) {
 	templatesRepo := NewTemplatesRepo(db)
 
 	user := &entities.User{
-		Id:        uuid.New(),
-		Email:     "test@example.com",
-		Password:  "11111111",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Id:           uuid.New(),
+		Email:        "test@example.com",
+		PasswordHash: "password_hash",
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 
 	_, _ = usersRepo.Create(user)

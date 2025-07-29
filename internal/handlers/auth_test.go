@@ -31,7 +31,7 @@ func NewMockAuthService() services.AuthService {
 }
 
 func (s *MockAuthService) Register(userDTO *dto.UserDTO) (*dto.UserDTO, error) {
-	user := mapper.FromUserDTOToUserEntity(userDTO)
+	user := mapper.FromUserDTOToUserEntity(userDTO, userDTO.Password+"_hash")
 
 	s.users[user.Id] = user
 
@@ -40,7 +40,7 @@ func (s *MockAuthService) Register(userDTO *dto.UserDTO) (*dto.UserDTO, error) {
 
 func (s *MockAuthService) Login(credentials *dto.UserCredentials) (*dto.Token, error) {
 	for _, user := range s.users {
-		if user.Email == credentials.Email && user.Password == credentials.Password {
+		if user.Email == credentials.Email && user.PasswordHash == credentials.Password+"_hash" {
 			return &dto.Token{Token: "12345"}, nil
 		}
 	}

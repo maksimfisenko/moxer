@@ -40,11 +40,11 @@ func TestUsersRepo_Create(t *testing.T) {
 	usersRepo := NewUsersRepo(db)
 
 	user := &entities.User{
-		Id:        uuid.New(),
-		Email:     "test@example.com",
-		Password:  "11111111",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Id:           uuid.New(),
+		Email:        "test@example.com",
+		PasswordHash: "password_hash",
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 
 	// Act
@@ -64,11 +64,11 @@ func TestUsersRepo_FindById(t *testing.T) {
 	usersRepo := NewUsersRepo(db)
 
 	user := &entities.User{
-		Id:        uuid.New(),
-		Email:     "test@example.com",
-		Password:  "11111111",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Id:           uuid.New(),
+		Email:        "test@example.com",
+		PasswordHash: "password_hash",
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 
 	_, _ = usersRepo.Create(user)
@@ -89,11 +89,11 @@ func TestUsersRepo_FindByEmail(t *testing.T) {
 	usersRepo := NewUsersRepo(db)
 
 	user := &entities.User{
-		Id:        uuid.New(),
-		Email:     "test@example.com",
-		Password:  "11111111",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Id:           uuid.New(),
+		Email:        "test@example.com",
+		PasswordHash: "password_hash",
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 
 	_, _ = usersRepo.Create(user)

@@ -20,8 +20,10 @@ func TestUserDTOToUserEntity(t *testing.T) {
 		UpdatedAt: time.Now(),
 	}
 
+	hash := "password_hash"
+
 	// Act
-	entity := FromUserDTOToUserEntity(dto)
+	entity := FromUserDTOToUserEntity(dto, hash)
 
 	// Assert
 	assert.NotNil(t, entity)
@@ -34,11 +36,11 @@ func TestUserDTOToUserEntity(t *testing.T) {
 func TestUserEntityToUserDTO(t *testing.T) {
 	// Arrange
 	entity := &entities.User{
-		Id:        uuid.New(),
-		Email:     "test@example.com",
-		Password:  "password",
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		Id:           uuid.New(),
+		Email:        "test@example.com",
+		PasswordHash: "password_hash",
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}
 
 	// Act

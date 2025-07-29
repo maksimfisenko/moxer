@@ -9,6 +9,7 @@ import (
 	"github.com/maksimfisenko/moxer/internal/services/jwt"
 	"github.com/maksimfisenko/moxer/internal/services/mapper"
 	"github.com/maksimfisenko/moxer/internal/services/repo"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type authService struct {
@@ -20,9 +21,14 @@ func NewAuthSerice(authRepo repo.UsersRepo) *authService {
 }
 
 func (as *authService) Register(userDTO *dto.UserDTO) (*dto.UserDTO, error) {
-	entity := mapper.FromUserDTOToUserEntity(userDTO)
+	hash, err := hashPassword(userDTO.Password)
+	if err != nil {
+		return nil, errorsx.New("internal_error", "failed to create user", err)
+	}
 
-	_, err := as.usersRepo.Create(entity)
+	entity := mapper.FromUserDTOToUserEntity(userDTO, hash)
+
+	_, err = as.usersRepo.Create(entity)
 	if err != nil {
 		if errors.Is(err, errorsx.ErrEmailAlreadyExists) {
 			return nil, errorsx.New("user_exists", "user with given email already exists", nil)
@@ -39,7 +45,7 @@ func (as *authService) Login(credentials *dto.UserCredentials) (*dto.Token, erro
 		return nil, errorsx.New("internal_error", "failed to find user by email", err)
 	}
 
-	if user == nil || user.Password != credentials.Password {
+	if user == nil || !checkPasswordHash(credentials.Password, user.PasswordHash) {
 		return nil, errorsx.New("user_not_found", "user with given credentials not found", nil)
 	}
 
@@ -61,4 +67,14 @@ func (as *authService) GetById(userId uuid.UUID) (*dto.UserDTO, error) {
 	}
 
 	return mapper.FromUserEntityToUserDTO(user), nil
+}
+
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func checkPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
