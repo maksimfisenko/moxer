@@ -65,6 +65,18 @@ Moxer will output:
 | GET    | `/templates`              | Get current user's templates    | :white_check_mark: |
 | POST   | `/templates/:id/generate` | Generate mocks for a template   | :white_check_mark: |
 
+## :mailbox_with_mail: Postman API Collection
+
+This project includes a Postman collection and environment for testing the API easily.
+
+- :bookmark_tabs: [Postman Collection](postman/moxer.postman_collection.json)
+- :world_map: [Postman Environment](postman/moxer.postman_environment.json)
+
+### :white_check_mark: How to use
+
+1. Import both collection and environment files into Postman.
+2. Send the register and then login requests. If successful, the ```jwt-token``` will be saved autimatically and used in the ```Authorization``` header for all other requests where it is needed.
+
 ## :package: Dependencies
 - [Echo](https://echo.labstack.com/)
 - [GORM](https://gorm.io/index.html)
