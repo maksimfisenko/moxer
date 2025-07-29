@@ -6,7 +6,7 @@ import (
 )
 
 type AuthService interface {
-	Register(userDTO *dto.UserDTO) (*dto.UserDTO, error)
+	Register(userDTO *dto.User) (*dto.User, error)
 	Login(credentials *dto.UserCredentials) (*dto.Token, error)
-	GetById(userId uuid.UUID) (*dto.UserDTO, error)
+	GetById(userId uuid.UUID) (*dto.User, error)
 }

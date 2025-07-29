@@ -5,7 +5,7 @@ import (
 	"github.com/maksimfisenko/moxer/internal/services/dto"
 )
 
-func FromUserDTOToUserEntity(dto *dto.UserDTO, hash string) *entities.User {
+func FromUserDTOToUserEntity(dto *dto.User, hash string) *entities.User {
 	return &entities.User{
 		Id:           dto.Id,
 		Email:        dto.Email,
@@ -15,8 +15,8 @@ func FromUserDTOToUserEntity(dto *dto.UserDTO, hash string) *entities.User {
 	}
 }
 
-func FromUserEntityToUserDTO(entity *entities.User) *dto.UserDTO {
-	return &dto.UserDTO{
+func FromUserEntityToUserDTO(entity *entities.User) *dto.User {
+	return &dto.User{
 		Id:        entity.Id,
 		Email:     entity.Email,
 		CreatedAt: entity.CreatedAt,

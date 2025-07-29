@@ -20,7 +20,7 @@ func NewAuthSerice(authRepo repo.UsersRepo) *authService {
 	return &authService{usersRepo: authRepo}
 }
 
-func (as *authService) Register(userDTO *dto.UserDTO) (*dto.UserDTO, error) {
+func (as *authService) Register(userDTO *dto.User) (*dto.User, error) {
 	hash, err := hashPassword(userDTO.Password)
 	if err != nil {
 		return nil, errorsx.New("internal_error", "failed to create user", err)
@@ -57,7 +57,7 @@ func (as *authService) Login(credentials *dto.UserCredentials) (*dto.Token, erro
 	return &dto.Token{Token: token}, nil
 }
 
-func (as *authService) GetById(userId uuid.UUID) (*dto.UserDTO, error) {
+func (as *authService) GetById(userId uuid.UUID) (*dto.User, error) {
 	user, err := as.usersRepo.FindById(userId)
 	if err != nil {
 		return nil, errorsx.New("internal_error", "failed to find user by id", err)

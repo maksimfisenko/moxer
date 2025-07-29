@@ -55,7 +55,7 @@ func TestTemplatesService_Create(t *testing.T) {
 	authService := NewAuthSerice(usersRepo)
 	templatesService := NewTemplatesService(templatesRepo)
 
-	userDTO := &dto.UserDTO{
+	userDTO := &dto.User{
 		Id:        uuid.New(),
 		Email:     "test@example.com",
 		Password:  "11111111",
@@ -96,7 +96,7 @@ func TestTemplatesService_GetAllForUser(t *testing.T) {
 	authService := NewAuthSerice(usersRepo)
 	templatesService := NewTemplatesService(templatesRepo)
 
-	userDTO := &dto.UserDTO{
+	userDTO := &dto.User{
 		Id:        uuid.New(),
 		Email:     "test@example.com",
 		Password:  "11111111",
@@ -155,7 +155,7 @@ func TestTemplatesService_GenerateData(t *testing.T) {
 	authService := NewAuthSerice(usersRepo)
 	templatesService := NewTemplatesService(templatesRepo)
 
-	userDTO := &dto.UserDTO{
+	userDTO := &dto.User{
 		Id:        uuid.New(),
 		Email:     "test@example.com",
 		Password:  "11111111",

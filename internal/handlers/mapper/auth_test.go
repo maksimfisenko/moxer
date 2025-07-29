@@ -30,7 +30,7 @@ func TestFromRegisterRequestToUserDTO(t *testing.T) {
 
 func TestFromUserDTOToUserResponse(t *testing.T) {
 	// Arrange
-	dto := &dto.UserDTO{
+	dto := &dto.User{
 		Id:        uuid.New(),
 		Email:     "test@example.com",
 		Password:  "password",

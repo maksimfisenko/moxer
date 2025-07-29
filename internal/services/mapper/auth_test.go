@@ -12,7 +12,7 @@ import (
 
 func TestUserDTOToUserEntity(t *testing.T) {
 	// Arrange
-	dto := &dto.UserDTO{
+	dto := &dto.User{
 		Id:        uuid.New(),
 		Email:     "test@example.com",
 		Password:  "password",

@@ -43,7 +43,7 @@ func TestAuthService_Register(t *testing.T) {
 	usersRepo := &MockUsersRepo{}
 	service := NewAuthSerice(usersRepo)
 
-	userDTO := &dto.UserDTO{
+	userDTO := &dto.User{
 		Id:        uuid.New(),
 		Email:     "test@example.com",
 		Password:  "11111111",
@@ -66,7 +66,7 @@ func TestAuthService_Login(t *testing.T) {
 	usersRepo := &MockUsersRepo{}
 	service := NewAuthSerice(usersRepo)
 
-	userDTO := &dto.UserDTO{
+	userDTO := &dto.User{
 		Id:        uuid.New(),
 		Email:     "test@example.com",
 		Password:  "11111111",
@@ -106,7 +106,7 @@ func TestAuthService_GetById(t *testing.T) {
 	usersRepo := &MockUsersRepo{}
 	service := NewAuthSerice(usersRepo)
 
-	userDTO := &dto.UserDTO{
+	userDTO := &dto.User{
 		Id:        uuid.New(),
 		Email:     "test@example.com",
 		Password:  "11111111",
