@@ -18,6 +18,7 @@ var (
 	ErrInternalServerHTTP     = echo.NewHTTPError(http.StatusInternalServerError, "internal server error")
 	ErrUserNotFoundHTTP       = echo.NewHTTPError(http.StatusBadRequest, "user not found")
 	ErrInvalidTokenHTTP       = echo.NewHTTPError(http.StatusBadRequest, "invalid authentication token")
+	ErrInvalidTemplateIdHTTP  = echo.NewHTTPError(http.StatusBadRequest, "invalid template id parameter")
 	ErrTemplateNotFoundHTTP   = echo.NewHTTPError(http.StatusBadRequest, "template not found")
 	ErrTemplateExistsHTTP     = echo.NewHTTPError(http.StatusBadRequest, "template with given name already exists")
 )

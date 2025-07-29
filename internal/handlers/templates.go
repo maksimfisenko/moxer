@@ -118,7 +118,7 @@ func (th *templatesHandler) GetAllForUser(c echo.Context) error {
 func (th *templatesHandler) GenerateData(c echo.Context) error {
 	templateId, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		return errorsx.ErrInvalidTokenHTTP
+		return errorsx.ErrInvalidTemplateIdHTTP
 	}
 
 	var req requests.GenerateDataRequest
