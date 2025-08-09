@@ -12,14 +12,8 @@ import { PasswordInput } from "@/components/ui/password-input";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import api from "@/config/api-client";
-import { useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
-
-interface RegisterRequest {
-  email: string;
-  password: string;
-}
+import type { RegisterRequest } from "../types/types";
 
 const registerFormSchema = z.object({
   email: z.email("Invalid email address"),
@@ -28,11 +22,19 @@ const registerFormSchema = z.object({
 
 type RegisterFormData = z.infer<typeof registerFormSchema>;
 
-const RegisterForm = () => {
-  const [error, setError] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+interface RegisterFormProps {
+  isError: boolean;
+  isSuccess: boolean;
+  isLoading: boolean;
+  onFormSubmit: (registerRequest: RegisterRequest) => void;
+}
 
+const RegisterForm = ({
+  isError,
+  isSuccess,
+  isLoading,
+  onFormSubmit,
+}: RegisterFormProps) => {
   const {
     register,
     handleSubmit,
@@ -40,18 +42,6 @@ const RegisterForm = () => {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
   });
-
-  const handleFormSubmit = (registerRequest: RegisterRequest) => {
-    setError(false);
-    setSuccess(false);
-    setLoading(true);
-
-    api
-      .post("api/v1/auth/register", registerRequest)
-      .then(() => setSuccess(true))
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  };
 
   return (
     <>
@@ -61,7 +51,7 @@ const RegisterForm = () => {
         justify={"center"}
         backgroundColor={"gray.100"}
       >
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <form onSubmit={handleSubmit(onFormSubmit)}>
           <Fieldset.Root
             size={"lg"}
             w={"lg"}
@@ -111,17 +101,17 @@ const RegisterForm = () => {
                 alignSelf={"center"}
                 w={"3xs"}
                 mb={2}
-                disabled={loading}
+                disabled={isLoading}
               >
                 Submit
               </Button>
               <Link alignSelf={"center"}>Already have an account?</Link>
-              {success && (
+              {isSuccess && (
                 <Heading alignSelf={"center"} bg={"green"}>
                   Success!
                 </Heading>
               )}
-              {error && (
+              {isError && (
                 <Heading alignSelf={"center"} bg={"red"}>
                   Error!
                 </Heading>
