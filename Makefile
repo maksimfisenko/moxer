@@ -6,3 +6,7 @@ help:
 ## run/backend: run the backend of the application
 run/backend:
 	cd ./backend && go run ./cmd/moxer
+
+## run/frontend: run the frontend of the application
+run/frontend:
+	cd ./frontend && npm run dev
