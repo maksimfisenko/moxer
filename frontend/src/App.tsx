@@ -1,7 +1,7 @@
-import LoginPage from "./features/auth/components/LoginPage";
+import { Heading } from "@chakra-ui/react";
 
 function App() {
-  return <LoginPage />;
+  return <Heading>Hello, World!</Heading>;
 }
 
 export default App;

@@ -5,9 +5,11 @@ import { type AxiosErrorResponseData } from "@/types/types";
 import { getFullErrorMessage } from "@/utils/utils";
 import { useLogin } from "../hooks/use-login";
 import LoginForm from "./LoginForm";
+import { useNavigate } from "react-router";
 
 const LoginPage = () => {
   const { mutate, isPending } = useLogin();
+  const navigate = useNavigate();
 
   const handleLogin = (loginRequest: LoginRequest) => {
     mutate(loginRequest, {
@@ -29,9 +31,17 @@ const LoginPage = () => {
     });
   };
 
+  const handleNavigateToRegisterPage = () => {
+    navigate("/register");
+  };
+
   return (
     <>
-      <LoginForm isLoading={isPending} onFormSubmit={handleLogin} />
+      <LoginForm
+        isLoading={isPending}
+        onFormSubmit={handleLogin}
+        onLinkClick={handleNavigateToRegisterPage}
+      />
       <Toaster />
     </>
   );

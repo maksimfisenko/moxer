@@ -24,9 +24,14 @@ type LoginFormData = z.infer<typeof loginFormSchema>;
 interface LoginFormProps {
   isLoading: boolean;
   onFormSubmit: (loginRequest: LoginRequest) => void;
+  onLinkClick: () => void;
 }
 
-const LoginForm = ({ isLoading, onFormSubmit }: LoginFormProps) => {
+const LoginForm = ({
+  isLoading,
+  onFormSubmit,
+  onLinkClick,
+}: LoginFormProps) => {
   const {
     register,
     handleSubmit,
@@ -97,7 +102,9 @@ const LoginForm = ({ isLoading, onFormSubmit }: LoginFormProps) => {
               >
                 Submit
               </Button>
-              <Link alignSelf={"center"}>Don't have an acccount?</Link>
+              <Link alignSelf={"center"} onClick={onLinkClick}>
+                Don't have an acccount?
+              </Link>
             </Stack>
           </Fieldset.Root>
         </form>

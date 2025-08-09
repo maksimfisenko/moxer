@@ -24,9 +24,14 @@ type RegisterFormData = z.infer<typeof registerFormSchema>;
 interface RegisterFormProps {
   isLoading: boolean;
   onFormSubmit: (registerRequest: RegisterRequest) => void;
+  onLinkClick: () => void;
 }
 
-const RegisterForm = ({ isLoading, onFormSubmit }: RegisterFormProps) => {
+const RegisterForm = ({
+  isLoading,
+  onFormSubmit,
+  onLinkClick,
+}: RegisterFormProps) => {
   const {
     register,
     handleSubmit,
@@ -97,7 +102,9 @@ const RegisterForm = ({ isLoading, onFormSubmit }: RegisterFormProps) => {
               >
                 Submit
               </Button>
-              <Link alignSelf={"center"}>Already have an account?</Link>
+              <Link alignSelf={"center"} onClick={onLinkClick}>
+                Already have an account?
+              </Link>
             </Stack>
           </Fieldset.Root>
         </form>

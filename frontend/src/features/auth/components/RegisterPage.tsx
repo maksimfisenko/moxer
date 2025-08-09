@@ -5,9 +5,11 @@ import { Toaster, toaster } from "@/components/ui/toaster";
 import type { AxiosError } from "axios";
 import { type AxiosErrorResponseData } from "@/types/types";
 import { getFullErrorMessage } from "@/utils/utils";
+import { useNavigate } from "react-router";
 
 const RegisterPage = () => {
   const { mutate, isPending } = useRegister();
+  const navigate = useNavigate();
 
   const handleRegister = (registerRequest: RegisterRequest) => {
     mutate(registerRequest, {
@@ -28,9 +30,17 @@ const RegisterPage = () => {
     });
   };
 
+  const handleNavigateToLoginPage = () => {
+    navigate("/login");
+  };
+
   return (
     <>
-      <RegisterForm isLoading={isPending} onFormSubmit={handleRegister} />
+      <RegisterForm
+        isLoading={isPending}
+        onFormSubmit={handleRegister}
+        onLinkClick={handleNavigateToLoginPage}
+      />
       <Toaster />
     </>
   );
