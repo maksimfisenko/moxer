@@ -1,12 +1,7 @@
-import { Button, HStack } from "@chakra-ui/react";
+import RegisterForm from "./features/auth/components/RegisterForm";
 
 function App() {
-  return (
-    <HStack>
-      <Button>Hello</Button>
-      <Button>World</Button>
-    </HStack>
-  );
+  return <RegisterForm />;
 }
 
 export default App;
