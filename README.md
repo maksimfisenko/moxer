@@ -52,7 +52,7 @@ Moxer will output:
 }
 ```
 
-## :closed_lock_with_key: API endpoints ```(api/v1)```
+## :closed_lock_with_key: API Endpoints ```(api/v1)```
 
 | Method | Path                      | Description                     | Auth Required |
 |:------:|:-------------------------:|:-------------------------------:|:------------------:|
@@ -64,6 +64,84 @@ Moxer will output:
 | POST   | `/templates`              | Create a new template           | :white_check_mark: |
 | GET    | `/templates`              | Get current user's templates    | :white_check_mark: |
 | POST   | `/templates/:id/generate` | Generate mocks for a template   | :white_check_mark: |
+
+## :sparkles: Supported Template Variables
+
+### Misc
+
+| Variable | Description      | Example |
+|:--------:|:----------------:|:-------:|
+| `{uuid}` | Random UUID (v4) | `...`   |
+| `{bool}` | Random boolean   | `...`   |
+
+### Person
+
+| Variable        | Description                 | Example |
+|:---------------:|:---------------------------:|:-------:|
+| `{name}`        | Random full name            | `...`   |
+| `{first_name}`  | Random first name           | `...`   |
+| `{middle_name}` | Random middle name          | `...`   |
+| `{last_name}`   | Random last name            | `...`   |
+| `{phone}`       | Random phone number         | `...`   |
+| `{email}`       | Random email address        | `...`   |
+| `{username}`    | Random username             | `...`   |
+| `{password}`    | Random password of length 8 | `...`   |
+| `{gender}`      | Random gender               | `...`   |
+
+### Address
+
+| Variable       | Description       | Example |
+|:--------------:|:-----------------:|:-------:|
+| `{country}`    | Random country    | `...`   |
+| `{city}`       | Random city       | `...`   |
+| `{street}`     | Random street     | `...`   |
+| `{zip}`        | Random zip code   | `...`   |
+| `{latitude}`   | Random latitude   | `...`   |
+| `{longtitude}` | Random longtitude | `...`   |
+
+### Words
+
+| Variable        | Description        | Example |
+|:---------------:|:------------------:|:-------:|
+| `{word}`        | Random word        | `...`   |
+| `{noun}`        | Random noun        | `...`   |
+| `{verb}`        | Random verb        | `...`   |
+| `{adverb}`      | Random adverb      | `...`   |
+| `{preposition}` | Random preposition | `...`   |
+| `{adjective}`   | Random adjective   | `...`   |
+| `{phrase}`      | Random phrase      | `...`   |
+| `{question}`    | Random question    | `...`   |
+
+### Colors
+
+| Variable  | Description              | Example |
+|:---------:|:------------------------:|:-------:|
+| `{color}` | Random color             | `...`   |
+| `{hex}`   | Random hexadecimal color | `...`   |
+
+### Internet
+
+| Variable          | Description                 | Example |
+|:-----------------:|:---------------------------:|:-------:|
+| `{url}`           | Random URL                  | `...`   |
+| `{domain_name}`   | Random domain name          | `...`   |
+| `{domain_suffix}` | Random domain suffix        | `...`   |
+| `{ipv4}`          | Random version 4 IP address | `...`   |
+| `{ipv6}`          | Random version 6 IP address | `...`   |
+
+### Date/Time
+
+| Variable        | Description                               | Example |
+|:---------------:|:-----------------------------------------:|:-------:|
+| `{date}`        | Random date                               | `...`   |
+| `{past_date}`   | Random past date                          | `...`   |
+| `{future_date}` | Random future date                        | `...`   |
+| `{year}`        | Random year between 1900 and current year | `...`   |
+| `{month}`       | Random month ordinal number               | `...`   |
+| `{weekday}`     | Random weekday                            | `...`   |
+| `{hour}`        | Random hour                               | `...`   |
+| `{minute}`      | Random minute                             | `...`   |
+| `{second}`      | Random second                             | `...`   |
 
 ## :mailbox_with_mail: Postman API Collection
 
