@@ -1,32 +1,38 @@
-import { useState } from "react";
 import RegisterForm from "./RegisterForm";
-import api from "@/config/api-client";
 import type { RegisterRequest } from "../types/types";
+import { useRegister } from "../hooks/use-register";
+import { Toaster, toaster } from "@/components/ui/toaster";
+import type { AxiosError } from "axios";
+import { type AxiosErrorResponseData } from "@/types/types";
+import { getFullErrorMessage } from "@/utils/utils";
 
 const RegisterPage = () => {
-  const [error, setError] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { mutate, isPending } = useRegister();
 
   const handleRegister = (registerRequest: RegisterRequest) => {
-    setError(false);
-    setSuccess(false);
-    setLoading(true);
-
-    api
-      .post("api/v1/auth/register", registerRequest)
-      .then(() => setSuccess(true))
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
+    mutate(registerRequest, {
+      onSuccess: () => {
+        toaster.create({
+          title: "Success",
+          description: "Successfully registered new account!",
+          type: "success",
+        });
+      },
+      onError: (error: AxiosError<AxiosErrorResponseData>) => {
+        toaster.create({
+          title: "Error",
+          description: getFullErrorMessage(error.response?.data?.message),
+          type: "error",
+        });
+      },
+    });
   };
 
   return (
-    <RegisterForm
-      isError={error}
-      isSuccess={success}
-      isLoading={loading}
-      onFormSubmit={handleRegister}
-    />
+    <>
+      <RegisterForm isLoading={isPending} onFormSubmit={handleRegister} />
+      <Toaster />
+    </>
   );
 };
 

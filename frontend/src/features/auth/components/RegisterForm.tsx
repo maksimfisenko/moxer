@@ -3,7 +3,6 @@ import {
   Field,
   Fieldset,
   Flex,
-  Heading,
   Input,
   Link,
   Stack,
@@ -23,18 +22,11 @@ const registerFormSchema = z.object({
 type RegisterFormData = z.infer<typeof registerFormSchema>;
 
 interface RegisterFormProps {
-  isError: boolean;
-  isSuccess: boolean;
   isLoading: boolean;
   onFormSubmit: (registerRequest: RegisterRequest) => void;
 }
 
-const RegisterForm = ({
-  isError,
-  isSuccess,
-  isLoading,
-  onFormSubmit,
-}: RegisterFormProps) => {
+const RegisterForm = ({ isLoading, onFormSubmit }: RegisterFormProps) => {
   const {
     register,
     handleSubmit,
@@ -106,16 +98,6 @@ const RegisterForm = ({
                 Submit
               </Button>
               <Link alignSelf={"center"}>Already have an account?</Link>
-              {isSuccess && (
-                <Heading alignSelf={"center"} bg={"green"}>
-                  Success!
-                </Heading>
-              )}
-              {isError && (
-                <Heading alignSelf={"center"} bg={"red"}>
-                  Error!
-                </Heading>
-              )}
             </Stack>
           </Fieldset.Root>
         </form>
