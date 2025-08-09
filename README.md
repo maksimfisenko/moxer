@@ -147,8 +147,8 @@ Moxer will output:
 
 This project includes a Postman collection and environment for testing the API easily.
 
-- :bookmark_tabs: [Postman Collection](postman/moxer.postman_collection.json)
-- :world_map: [Postman Environment](postman/moxer.postman_environment.json)
+- :bookmark_tabs: [Postman Collection](baclend/postman/moxer.postman_collection.json)
+- :world_map: [Postman Environment](backend/postman/moxer.postman_environment.json)
 
 ### :white_check_mark: How to use
 
