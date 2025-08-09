@@ -1,7 +1,7 @@
-import RegisterPage from "./features/auth/components/RegisterPage";
+import LoginPage from "./features/auth/components/LoginPage";
 
 function App() {
-  return <RegisterPage />;
+  return <LoginPage />;
 }
 
 export default App;
