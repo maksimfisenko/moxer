@@ -14,12 +14,8 @@ const LoginPage = () => {
   const handleLogin = (loginRequest: LoginRequest) => {
     mutate(loginRequest, {
       onSuccess: (token) => {
-        console.log(token.token);
-        toaster.create({
-          title: "Success",
-          description: "Successfully signed in account!",
-          type: "success",
-        });
+        localStorage.setItem("token", token.token);
+        navigate("/");
       },
       onError: (error: AxiosError<AxiosErrorResponseData>) => {
         toaster.create({
