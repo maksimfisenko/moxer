@@ -1,11 +1,34 @@
-import { Flex } from "@chakra-ui/react";
+import { Center, Flex, Spinner } from "@chakra-ui/react";
 import Header from "@/components/Header";
 import Content from "./Content";
+import { useGetCurrentUser } from "@/hooks/use-get-current-user";
+import { useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 
 const MainPage = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { data, isLoading, isError } = useGetCurrentUser();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    queryClient.removeQueries({ queryKey: ["me"] });
+    navigate("/login");
+  };
+
+  if (isLoading)
+    return (
+      <Center w="100%">
+        <Spinner size={"xl"} />
+      </Center>
+    );
+
+  if (isError) return handleLogout();
+  if (!data) return handleLogout();
+
   return (
-    <Flex flex={1} direction={"column"} bgColor={"gray.100"}>
-      <Header />
+    <Flex h={"100%"} direction={"column"} bgColor={"gray.100"}>
+      <Header user={data} onButtonClick={handleLogout} />
       <Content />
     </Flex>
   );

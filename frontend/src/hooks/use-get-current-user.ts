@@ -8,6 +8,7 @@ const useGetCurrentUser = () => {
   return useQuery<User, AxiosError<AxiosErrorResponseData>>({
     queryKey: ["me"],
     queryFn: async () => (await api.get<User>("api/v1/auth/me")).data,
+    retry: 0,
   });
 };
 

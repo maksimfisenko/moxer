@@ -1,31 +1,13 @@
-import { useGetCurrentUser } from "@/hooks/use-get-current-user";
-import {
-  Flex,
-  Heading,
-  HStack,
-  IconButton,
-  Spinner,
-  Tag,
-} from "@chakra-ui/react";
-import { useQueryClient } from "@tanstack/react-query";
+import type { User } from "@/types/types";
+import { Flex, Heading, HStack, IconButton, Tag } from "@chakra-ui/react";
 import { LuCircleArrowRight, LuCircleUser } from "react-icons/lu";
-import { useNavigate } from "react-router";
 
-const Header = () => {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { data, isLoading, isError, error } = useGetCurrentUser();
+interface HeaderProps {
+  user: User;
+  onButtonClick: () => void;
+}
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    queryClient.removeQueries({ queryKey: ["me"] });
-    navigate("/login");
-  };
-
-  if (isLoading) return <Spinner />;
-  if (isError) return <div>{error.response?.data.message}</div>;
-  if (!data) return null;
-
+const Header = ({ user, onButtonClick }: HeaderProps) => {
   return (
     <Flex
       p={4}
@@ -46,13 +28,13 @@ const Header = () => {
           <Tag.StartElement>
             <LuCircleUser />
           </Tag.StartElement>
-          <Tag.Label>{data.email}</Tag.Label>
+          <Tag.Label>{user.email}</Tag.Label>
         </Tag.Root>
         <IconButton
           aria-label="Log out"
           variant={"surface"}
           colorPalette={"red"}
-          onClick={handleLogout}
+          onClick={onButtonClick}
           size={"xs"}
           rounded={"lg"}
         >
