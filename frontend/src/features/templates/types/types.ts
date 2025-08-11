@@ -15,3 +15,8 @@ export interface Template {
 export interface GenerateDataRequest {
   count: number;
 }
+
+export interface CreateTemplateRequest {
+  name: string;
+  content: any;
+}

@@ -11,7 +11,6 @@ import { PasswordInput } from "@/components/ui/password-input";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Toaster } from "@/components/ui/toaster";
 import type { RegisterRequest } from "../types/types";
 
 const registerFormSchema = z.object({
@@ -109,7 +108,6 @@ const RegisterForm = ({
           </Fieldset.Root>
         </form>
       </Flex>
-      <Toaster />
     </>
   );
 };

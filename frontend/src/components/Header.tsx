@@ -1,6 +1,7 @@
 import type { User } from "@/types/types";
-import { Flex, Heading, HStack, IconButton, Tag } from "@chakra-ui/react";
-import { LuCircleArrowRight, LuCircleUser } from "react-icons/lu";
+import { Flex, Heading, HStack } from "@chakra-ui/react";
+import LogoutButton from "./LogoutButton";
+import UserInfo from "./UserInfo";
 
 interface HeaderProps {
   user: User;
@@ -24,22 +25,8 @@ const Header = ({ user, onButtonClick }: HeaderProps) => {
     >
       <Heading size={"3xl"}>MOXER</Heading>
       <HStack>
-        <Tag.Root size={"xl"} variant={"outline"} rounded={"lg"}>
-          <Tag.StartElement>
-            <LuCircleUser />
-          </Tag.StartElement>
-          <Tag.Label>{user.email}</Tag.Label>
-        </Tag.Root>
-        <IconButton
-          aria-label="Log out"
-          variant={"surface"}
-          colorPalette={"red"}
-          onClick={onButtonClick}
-          size={"xs"}
-          rounded={"lg"}
-        >
-          <LuCircleArrowRight />
-        </IconButton>
+        <UserInfo email={user.email} />
+        <LogoutButton onButtonClick={onButtonClick} />
       </HStack>
     </Flex>
   );

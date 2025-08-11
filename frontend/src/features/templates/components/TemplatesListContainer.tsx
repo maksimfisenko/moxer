@@ -1,23 +1,21 @@
-import {
-  Heading,
-  HStack,
-  IconButton,
-  Separator,
-  VStack,
-} from "@chakra-ui/react";
+import { Separator, VStack } from "@chakra-ui/react";
 import type { Template } from "../types/types";
-import { LuCirclePlus } from "react-icons/lu";
 import TemplatesList from "./TemplatesList";
+import { useState } from "react";
+
+import MyTemplatesContainer from "./MyTemplatesContainer";
 
 interface TemplatesListContainerProps {
-  selectedTempl: Template | null;
-  setSelectedTempl: React.Dispatch<React.SetStateAction<Template | null>>;
+  template: Template | null;
+  setTemplate: React.Dispatch<React.SetStateAction<Template | null>>;
 }
 
 const TemplatesListContainer = ({
-  selectedTempl,
-  setSelectedTempl,
+  template,
+  setTemplate,
 }: TemplatesListContainerProps) => {
+  const [open, setOpen] = useState(false);
+
   return (
     <VStack
       w={"20%"}
@@ -26,24 +24,9 @@ const TemplatesListContainer = ({
       borderRight={"2px solid"}
       borderColor={"gray.200"}
     >
-      <HStack justify={"space-between"} align={"center"} mb={2}>
-        <Heading size={"xl"}>My templates</Heading>
-        <IconButton
-          size={"xs"}
-          colorPalette={"green"}
-          rounded={"md"}
-          variant={"surface"}
-        >
-          <LuCirclePlus />
-        </IconButton>
-      </HStack>
-
+      <MyTemplatesContainer open={open} setOpen={setOpen} />
       <Separator />
-
-      <TemplatesList
-        selectedTempl={selectedTempl}
-        setSelectedTempl={setSelectedTempl}
-      />
+      <TemplatesList selectedTempl={template} setSelectedTempl={setTemplate} />
     </VStack>
   );
 };

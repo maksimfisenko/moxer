@@ -13,25 +13,23 @@ import type { AxiosErrorResponseData } from "@/types/types";
 import { useState } from "react";
 
 interface TemplatePreviewProps {
-  selectedTempl: Template | null;
+  template: Template | null;
 }
 
-const TemplatePreview = ({ selectedTempl }: TemplatePreviewProps) => {
+const TemplatePreview = ({ template }: TemplatePreviewProps) => {
   const { mutate, isPending } = useGenerateData();
-  const [generatedData, setGeneratedData] = useState<GeneratedData | null>(
-    null
-  );
+  const [data, setData] = useState<GeneratedData | null>(null);
 
   const handleGenerateData = (data: GenerateDataRequest) => {
     mutate(
       {
-        id: selectedTempl?.id || "",
+        id: template?.id || "",
         req: data,
       },
       {
         onSuccess: (data) => {
           console.log(data.data);
-          setGeneratedData(data);
+          setData(data);
         },
         onError: (error: AxiosError<AxiosErrorResponseData>) => {
           console.log(error.response?.data.message);
@@ -42,27 +40,23 @@ const TemplatePreview = ({ selectedTempl }: TemplatePreviewProps) => {
 
   return (
     <VStack pl={4} align={"stretch"} flex={1}>
-      {selectedTempl ? (
+      {template ? (
         <>
           <Heading size={"xl"} mb={2.5}>
-            {selectedTempl.name}
+            {template.name}
           </Heading>
-
           <Separator />
-          <TemplateInfo selectedTempl={selectedTempl} />
+          <TemplateInfo selectedTempl={template} />
           <Separator />
           <GenerateDataForm
             isLoading={isPending}
             onFormSubmit={handleGenerateData}
           />
           <Separator />
-          {generatedData ? (
-            <TemplateTabs
-              content={selectedTempl.content}
-              generatedData={generatedData}
-            />
+          {data ? (
+            <TemplateTabs content={template.content} generatedData={data} />
           ) : (
-            <TemplateTabs content={selectedTempl.content} />
+            <TemplateTabs content={template.content} />
           )}
         </>
       ) : (
