@@ -29,10 +29,6 @@ func Start() {
 
 	setupRoutes(e, db)
 
-	e.Use(middleware.RequestLogger())
-	e.Use(middleware.JwtMiddleware())
-	e.Use(echoMiddleware.CORS())
-
 	log.Printf("starting server on %s...", config.Cfg.Port)
 	if err := e.Start(config.Cfg.Port); err != http.ErrServerClosed {
 		log.Fatalf("fatal error: %v", err)
@@ -40,15 +36,24 @@ func Start() {
 }
 
 func setupRoutes(e *echo.Echo, db *gorm.DB) {
-	e.GET("/swagger/*", echoSwagger.WrapHandler)
-
+	// Set up internal layers
 	usersRepo := repo.NewUsersRepo(db)
 	templatesRepo := repo.NewTemplatesRepo(db)
 
 	authService := services.NewAuthSerice(usersRepo)
 	templatesService := services.NewTemplatesService(templatesRepo)
 
-	handlers.NewHealthHandler(e)
-	handlers.NewAuthHandler(e, authService)
-	handlers.NewTemplatesHandler(e, templatesService)
+	// Set up paths and middleware
+	apiV1 := e.Group("/api/v1")
+	public := apiV1.Group("/public")
+	private := apiV1.Group("/private")
+	private.Use(middleware.JwtRequired())
+
+	e.Use(middleware.RequestLogger())
+	e.Use(echoMiddleware.CORS())
+
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
+	handlers.NewHealthHandler(public)
+	handlers.NewAuthHandler(public, private, authService)
+	handlers.NewTemplatesHandler(private, templatesService)
 }

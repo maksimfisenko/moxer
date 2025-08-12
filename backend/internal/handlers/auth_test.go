@@ -58,8 +58,12 @@ func (s *MockAuthService) GetById(userId uuid.UUID) (*dto.User, error) {
 func TestRegister(t *testing.T) {
 	// Arrange
 	e := echo.New()
+	apiV1 := e.Group("/api/v1")
+	public := apiV1.Group("/public")
+	private := apiV1.Group("/private")
+
 	mockAuthService := NewMockAuthService()
-	handler := NewAuthHandler(e, mockAuthService)
+	handler := NewAuthHandler(public, private, mockAuthService)
 
 	registerReq := requests.RegisterRequest{
 		Email:    "email@example.com",
@@ -67,7 +71,7 @@ func TestRegister(t *testing.T) {
 	}
 
 	registerReqJSON, _ := json.Marshal(registerReq)
-	req := httptest.NewRequest(http.MethodPost, "/api/v1/auth/register", bytes.NewReader(registerReqJSON))
+	req := httptest.NewRequest(http.MethodPost, "/auth/register", bytes.NewReader(registerReqJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -91,8 +95,13 @@ func TestRegister(t *testing.T) {
 func TestLogin(t *testing.T) {
 	// Arrange
 	e := echo.New()
+	apiV1 := e.Group("/api/v1")
+	public := apiV1.Group("/public")
+	private := apiV1.Group("/private")
+
 	mockAuthService := NewMockAuthService()
-	handler := NewAuthHandler(e, mockAuthService)
+
+	handler := NewAuthHandler(public, private, mockAuthService)
 
 	registerReq := requests.RegisterRequest{
 		Email:    "email@example.com",
@@ -109,7 +118,7 @@ func TestLogin(t *testing.T) {
 	assert.NoError(t, err)
 
 	loginReqJSON, _ := json.Marshal(loginReq)
-	req := httptest.NewRequest(http.MethodPost, "/api/v1/auth/login", bytes.NewReader(loginReqJSON))
+	req := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewReader(loginReqJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -132,8 +141,13 @@ func TestLogin(t *testing.T) {
 func TestGetCurrentUser(t *testing.T) {
 	// Arrange
 	e := echo.New()
+	apiV1 := e.Group("/api/v1")
+	public := apiV1.Group("/public")
+	private := apiV1.Group("/private")
+
 	mockAuthService := NewMockAuthService()
-	handler := NewAuthHandler(e, mockAuthService)
+
+	handler := NewAuthHandler(public, private, mockAuthService)
 
 	registerReq := requests.RegisterRequest{
 		Email:    "email@example.com",
@@ -144,7 +158,7 @@ func TestGetCurrentUser(t *testing.T) {
 	_, err := mockAuthService.Register(userDTO)
 	assert.NoError(t, err)
 
-	req := httptest.NewRequest(http.MethodGet, "/api/v1/auth/me", nil)
+	req := httptest.NewRequest(http.MethodGet, "/auth/me", nil)
 	rec := httptest.NewRecorder()
 	c := echo.New().NewContext(req, rec)
 	c.Set("userId", userDTO.Id.String())

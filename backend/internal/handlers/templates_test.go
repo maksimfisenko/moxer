@@ -63,8 +63,9 @@ func (s *MockTemplatesService) GenerateData(templateId uuid.UUID, count int) (*d
 func TestCreateTemplate(t *testing.T) {
 	// Arrange
 	e := echo.New()
+	private := e.Group("/api/v1/private")
 	mockTemplatesService := NewMockTemplatesService()
-	handler := NewTemplatesHandler(e, mockTemplatesService)
+	handler := NewTemplatesHandler(private, mockTemplatesService)
 
 	templateReq := requests.CreateTemplateRequest{
 		Name: "user",
@@ -75,7 +76,7 @@ func TestCreateTemplate(t *testing.T) {
 	}
 
 	templateReqJSON, _ := json.Marshal(templateReq)
-	req := httptest.NewRequest(http.MethodPost, "/api/v1/templates", bytes.NewReader(templateReqJSON))
+	req := httptest.NewRequest(http.MethodPost, "/templates", bytes.NewReader(templateReqJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -101,8 +102,9 @@ func TestCreateTemplate(t *testing.T) {
 func TestGetAllForUser(t *testing.T) {
 	// Arrange
 	e := echo.New()
+	private := e.Group("/api/v1/private")
 	mockTemplatesService := NewMockTemplatesService()
-	handler := NewTemplatesHandler(e, mockTemplatesService)
+	handler := NewTemplatesHandler(private, mockTemplatesService)
 
 	template1Req := requests.CreateTemplateRequest{
 		Name: "user_1",
@@ -125,7 +127,7 @@ func TestGetAllForUser(t *testing.T) {
 
 	userId := uuid.New().String()
 
-	req := httptest.NewRequest(http.MethodPost, "/api/v1/templates", bytes.NewReader(template1ReqJSON))
+	req := httptest.NewRequest(http.MethodPost, "/templates", bytes.NewReader(template1ReqJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -135,7 +137,7 @@ func TestGetAllForUser(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	req = httptest.NewRequest(http.MethodPost, "/api/v1/templates", bytes.NewReader(template2ReqJSON))
+	req = httptest.NewRequest(http.MethodPost, "/templates", bytes.NewReader(template2ReqJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
@@ -145,7 +147,7 @@ func TestGetAllForUser(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	req = httptest.NewRequest(http.MethodGet, "/api/v1/templates", nil)
+	req = httptest.NewRequest(http.MethodGet, "/templates", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec = httptest.NewRecorder()
 	c = e.NewContext(req, rec)
@@ -172,8 +174,9 @@ func TestGetAllForUser(t *testing.T) {
 func TestGenerateData(t *testing.T) {
 	// Arrange
 	e := echo.New()
+	private := e.Group("/api/v1/private")
 	mockTemplatesService := NewMockTemplatesService()
-	handler := NewTemplatesHandler(e, mockTemplatesService)
+	handler := NewTemplatesHandler(private, mockTemplatesService)
 
 	templateReq := requests.CreateTemplateRequest{
 		Name: "user",
@@ -186,7 +189,7 @@ func TestGenerateData(t *testing.T) {
 	templateReqJSON, _ := json.Marshal(templateReq)
 	userId := uuid.New().String()
 
-	req := httptest.NewRequest(http.MethodPost, "/api/v1/templates", bytes.NewReader(templateReqJSON))
+	req := httptest.NewRequest(http.MethodPost, "/templates", bytes.NewReader(templateReqJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -200,7 +203,7 @@ func TestGenerateData(t *testing.T) {
 	err := json.Unmarshal(rec.Body.Bytes(), &templ)
 	assert.NoError(t, err)
 
-	url := fmt.Sprintf("/api/v1/templates/%s/generate", templ.Id)
+	url := fmt.Sprintf("/templates/%s/generate", templ.Id)
 
 	genReq := requests.GenerateDataRequest{
 		Count: 3,
@@ -213,7 +216,7 @@ func TestGenerateData(t *testing.T) {
 	c = e.NewContext(req, rec)
 	c.Set("userId", userId)
 
-	c.SetPath("/api/v1/templates/:id/generate")
+	c.SetPath("/templates/:id/generate")
 	c.SetParamNames("id")
 	c.SetParamValues(templ.Id)
 

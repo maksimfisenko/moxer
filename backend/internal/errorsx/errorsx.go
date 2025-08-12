@@ -13,6 +13,7 @@ var (
 )
 
 var (
+	ErrUnauthorizedHTTP       = echo.NewHTTPError(http.StatusUnauthorized, "missing or invalid auth token")
 	ErrInvalidRequestBodyHTTP = echo.NewHTTPError(http.StatusBadRequest, "invalid request body")
 	ErrUserExistsHTTP         = echo.NewHTTPError(http.StatusConflict, "user already exists")
 	ErrInternalServerHTTP     = echo.NewHTTPError(http.StatusInternalServerError, "internal server error")

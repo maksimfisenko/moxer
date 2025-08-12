@@ -16,14 +16,15 @@ type authHandler struct {
 	authService services.AuthService
 }
 
-func NewAuthHandler(e *echo.Echo, authService services.AuthService) *authHandler {
+func NewAuthHandler(public, private *echo.Group, authService services.AuthService) *authHandler {
 	handler := &authHandler{
 		authService: authService,
 	}
 
-	e.POST("/api/v1/auth/register", handler.Register)
-	e.POST("/api/v1/auth/login", handler.Login)
-	e.GET("/api/v1/auth/me", handler.GetCurrentUser)
+	public.POST("/auth/register", handler.Register)
+	public.POST("/auth/login", handler.Login)
+
+	private.GET("/auth/me", handler.GetCurrentUser)
 
 	return handler
 }

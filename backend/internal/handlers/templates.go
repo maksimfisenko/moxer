@@ -16,14 +16,14 @@ type templatesHandler struct {
 	templatesService services.TemplatesService
 }
 
-func NewTemplatesHandler(e *echo.Echo, templatesService services.TemplatesService) *templatesHandler {
+func NewTemplatesHandler(private *echo.Group, templatesService services.TemplatesService) *templatesHandler {
 	handler := &templatesHandler{
 		templatesService: templatesService,
 	}
 
-	e.POST("/api/v1/templates", handler.CreateTemplate)
-	e.GET("/api/v1/templates", handler.GetAllForUser)
-	e.POST("/api/v1/templates/:id/generate", handler.GenerateData)
+	private.POST("/api/v1/templates", handler.CreateTemplate)
+	private.GET("/api/v1/templates", handler.GetAllForUser)
+	private.POST("/api/v1/templates/:id/generate", handler.GenerateData)
 
 	return handler
 }

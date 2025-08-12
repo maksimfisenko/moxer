@@ -14,9 +14,10 @@ import (
 func TestHealthCheck(t *testing.T) {
 	// Arrange
 	e := echo.New()
-	handler := NewHealthHandler(e)
+	g := e.Group("/api/v1/public")
+	handler := NewHealthHandler(g)
 
-	req := httptest.NewRequest(http.MethodGet, "/api/v1/healthz", nil)
+	req := httptest.NewRequest(http.MethodGet, "/healthz", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 

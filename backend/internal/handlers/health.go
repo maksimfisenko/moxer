@@ -9,12 +9,12 @@ import (
 
 type healthHandler struct{}
 
-func NewHealthHandler(e *echo.Echo) *healthHandler {
+func NewHealthHandler(public *echo.Group) *healthHandler {
 	handler := &healthHandler{}
 
-	e.GET("/api/v1/healthz", handler.HealthCheck)
+	public.GET("/healthz", handler.HealthCheck)
 
-	return handler
+	return &healthHandler{}
 }
 
 // HealthCheck godoc
