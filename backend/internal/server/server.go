@@ -29,7 +29,9 @@ func Start() {
 
 	setupRoutes(e, db)
 
+	e.Use(middleware.RequestLogger())
 	e.Use(middleware.JWTMiddleware())
+	e.Use(echoMiddleware.CORS())
 
 	log.Printf("starting server on %s...", config.Cfg.Port)
 	if err := e.Start(config.Cfg.Port); err != http.ErrServerClosed {
@@ -49,6 +51,4 @@ func setupRoutes(e *echo.Echo, db *gorm.DB) {
 	handlers.NewHealthHandler(e)
 	handlers.NewAuthHandler(e, authService)
 	handlers.NewTemplatesHandler(e, templatesService)
-
-	e.Use(echoMiddleware.CORS())
 }
