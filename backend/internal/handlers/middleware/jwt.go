@@ -7,7 +7,7 @@ import (
 	"github.com/maksimfisenko/moxer/internal/services/jwt"
 )
 
-func JWTMiddleware() echo.MiddlewareFunc {
+func JwtMiddleware() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			authHeader := c.Request().Header.Get("Authorization")

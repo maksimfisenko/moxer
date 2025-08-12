@@ -30,7 +30,7 @@ func Start() {
 	setupRoutes(e, db)
 
 	e.Use(middleware.RequestLogger())
-	e.Use(middleware.JWTMiddleware())
+	e.Use(middleware.JwtMiddleware())
 	e.Use(echoMiddleware.CORS())
 
 	log.Printf("starting server on %s...", config.Cfg.Port)
