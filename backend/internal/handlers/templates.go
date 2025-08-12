@@ -21,9 +21,9 @@ func NewTemplatesHandler(private *echo.Group, templatesService services.Template
 		templatesService: templatesService,
 	}
 
-	private.POST("/api/v1/templates", handler.CreateTemplate)
-	private.GET("/api/v1/templates", handler.GetAllForUser)
-	private.POST("/api/v1/templates/:id/generate", handler.GenerateData)
+	private.POST("/templates", handler.CreateTemplate)
+	private.GET("/templates", handler.GetAllForUser)
+	private.POST("/templates/:id/generate", handler.GenerateData)
 
 	return handler
 }
