@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/maksimfisenko/moxer/internal/config"
 	"github.com/maksimfisenko/moxer/internal/handlers"
 	"github.com/maksimfisenko/moxer/internal/handlers/middleware"
@@ -48,4 +49,6 @@ func setupRoutes(e *echo.Echo, db *gorm.DB) {
 	handlers.NewHealthHandler(e)
 	handlers.NewAuthHandler(e, authService)
 	handlers.NewTemplatesHandler(e, templatesService)
+
+	e.Use(echoMiddleware.CORS())
 }

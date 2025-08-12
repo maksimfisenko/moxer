@@ -23,8 +23,14 @@ const MainPage = () => {
       </Center>
     );
 
-  if (isError) return handleLogout();
-  if (!data) return handleLogout();
+  if (isError) {
+    handleLogout();
+    return null;
+  }
+  if (!data) {
+    handleLogout();
+    return null;
+  }
 
   return (
     <Flex h={"100%"} direction={"column"} bgColor={"gray.100"}>
