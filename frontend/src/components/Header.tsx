@@ -1,7 +1,9 @@
 import type { User } from "@/types/types";
-import { Flex, Heading, HStack } from "@chakra-ui/react";
+import { Flex, Heading, HStack, Link, Separator } from "@chakra-ui/react";
 import LogoutButton from "./LogoutButton";
 import UserInfo from "./UserInfo";
+import { LuGithub } from "react-icons/lu";
+import { SocialIcon } from "react-social-icons";
 
 interface HeaderProps {
   user: User;
@@ -23,7 +25,21 @@ const Header = ({ user, onButtonClick }: HeaderProps) => {
       mt={4}
       mb={2}
     >
-      <Heading size={"3xl"}>MOXER</Heading>
+      <HStack>
+        <Heading size={"3xl"}>MOXER</Heading>
+        <Separator orientation={"vertical"} height={6} />
+        <Link href="https://github.com/maksimfisenko/moxer" target="_blank">
+          <LuGithub />
+        </Link>
+        <Link>
+          <SocialIcon
+            target="_blank"
+            url="https://t.me/maximfisenko"
+            style={{ height: "20px", width: "20px" }}
+          />
+        </Link>
+      </HStack>
+
       <HStack>
         <UserInfo email={user.email} />
         <LogoutButton onButtonClick={onButtonClick} />

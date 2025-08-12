@@ -43,6 +43,7 @@ const LoginForm = ({
     <>
       <Flex
         flex={1}
+        height={"100%"}
         align={"center"}
         justify={"center"}
         backgroundColor={"gray.100"}
