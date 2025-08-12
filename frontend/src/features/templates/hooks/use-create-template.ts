@@ -12,7 +12,7 @@ const useCreateTemplate = () => {
   >({
     mutationKey: ["create-template"],
     mutationFn: (req: CreateTemplateRequest) =>
-      api.post("api/v1/templates", req),
+      api.post("api/v1/private/templates", req)
   });
 };
 

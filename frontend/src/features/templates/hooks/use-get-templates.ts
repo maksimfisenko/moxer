@@ -8,7 +8,7 @@ const useGetTemplates = () => {
   return useQuery<Template[], AxiosError<AxiosErrorResponseData>>({
     queryKey: ["get-templates"],
     queryFn: async () => {
-      const response = await api.get<Template[]>("api/v1/templates");
+      const response = await api.get<Template[]>("api/v1/private/templates");
       return response.data.map((t) => ({
         ...t,
         created_at: new Date(t.created_at),

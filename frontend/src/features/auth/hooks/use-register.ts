@@ -9,7 +9,7 @@ const useRegister = () => {
     {
       mutationKey: ["register"],
       mutationFn: (registerRequest: RegisterRequest) =>
-        api.post("api/v1/auth/register", registerRequest),
+        api.post("api/v1/public/auth/register", registerRequest)
     }
   );
 };

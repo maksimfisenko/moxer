@@ -9,7 +9,7 @@ const useLogin = () => {
     mutationKey: ["login"],
     mutationFn: (loginRequest: LoginRequest) =>
       api
-        .post<Token>("api/v1/auth/login", loginRequest)
+        .post<Token>("api/v1/public/auth/login", loginRequest)
         .then((response) => response.data),
   });
 };

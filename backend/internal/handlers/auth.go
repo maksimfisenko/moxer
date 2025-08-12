@@ -39,8 +39,9 @@ func NewAuthHandler(public, private *echo.Group, authService services.AuthServic
 //	@Produce		json
 //	@Param			credentials	body		requests.CredentialsRequest	true	"New user credentials"
 //	@Success		200			{object}	responses.UserResponse		"Sucessfully registered new user"
-//	@Failure		400			{object}	responses.ErrorResponse		"Failed to parse request body"
-//	@Failure		500			{object}	responses.ErrorResponse		"Failed to register"
+//	@Failure		400			{object}	errorsx.HTTPError			"Invalid request body"
+//	@Failure		409			{object}	errorsx.HTTPError			"User already exists"
+//	@Failure		500			{object}	errorsx.HTTPError			"Internal server error"
 //	@Router			/public/auth/register [post]
 func (ah *authHandler) Register(c echo.Context) error {
 	var req requests.CredentialsRequest
@@ -71,9 +72,9 @@ func (ah *authHandler) Register(c echo.Context) error {
 //	@Accept			json
 //	@Produce		json
 //	@Param			credentials	body		requests.CredentialsRequest	true	"User's credentials used for logging in"
-//	@Success		200			{object}	responses.Token			"Sucessfully logged in a user"
-//	@Failure		400			{object}	responses.ErrorResponse	"Failed to parse request body"
-//	@Failure		500			{object}	responses.ErrorResponse	"Failed to login"
+//	@Success		200			{object}	responses.Token				"Sucessfully logged in a user"
+//	@Failure		400			{object}	errorsx.HTTPError			"Invalid request body / User not found"
+//	@Failure		500			{object}	errorsx.HTTPError			"Internal server error"
 //	@Router			/public/auth/login [post]
 func (ah *authHandler) Login(c echo.Context) error {
 	var req requests.CredentialsRequest
@@ -104,9 +105,9 @@ func (ah *authHandler) Login(c echo.Context) error {
 //	@Accept			json
 //	@Produce		json
 //	@Success		200	{object}	responses.UserResponse	"Sucessfully fetched current user"
-//	@Failure		400	{object}	responses.ErrorResponse	"Failed to parse token"
-//	@Failure		500	{object}	responses.ErrorResponse	"Failed to fetch current user"
-//	@Router			/auth/me [get]
+//	@Failure		400	{object}	errorsx.HTTPError		"Invalid authentication token / User not found"
+//	@Failure		500	{object}	errorsx.HTTPError		"Internal server error"
+//	@Router			/private/auth/me [get]
 func (ah *authHandler) GetCurrentUser(c echo.Context) error {
 	userIdRaw := c.Get("userId").(string)
 	userId, err := uuid.Parse(userIdRaw)

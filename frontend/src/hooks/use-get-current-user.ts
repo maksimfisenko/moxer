@@ -7,7 +7,7 @@ import type { AxiosErrorResponseData } from "@/types/types";
 const useGetCurrentUser = () => {
   return useQuery<User, AxiosError<AxiosErrorResponseData>>({
     queryKey: ["me"],
-    queryFn: async () => (await api.get<User>("api/v1/auth/me")).data,
+    queryFn: async () => (await api.get<User>("api/v1/private/auth/me")).data,
     retry: 0,
   });
 };

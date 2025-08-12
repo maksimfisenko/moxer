@@ -38,8 +38,9 @@ func NewTemplatesHandler(private *echo.Group, templatesService services.Template
 //	@Produce		json
 //	@Param			data	body		requests.CreateTemplateRequest	true	"Create template request"
 //	@Success		200		{object}	responses.Template				"Sucessfully created new template"
-//	@Failure		400		{object}	responses.ErrorResponse			"Failed to parse request body or token"
-//	@Failure		500		{object}	responses.ErrorResponse			"Failed to create new template"
+//	@Failure		400		{object}	errorsx.HTTPError				"Invalid authentication token / Invalid request body / User not found"
+//	@Failure		409		{object}	errorsx.HTTPError				"Template with given name already exists"
+//	@Failure		500		{object}	errorsx.HTTPError				"Internal server error"
 //	@Router			/private/templates [post]
 func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 	userIdRaw := c.Get("userId").(string)
@@ -77,9 +78,9 @@ func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 //	@Tags			templates
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{array}		responses.Template		"Successfully fetched user's templates"
-//	@Failure		400	{object}	responses.ErrorResponse	"Failed to parse token"
-//	@Failure		500	{object}	responses.ErrorResponse	"Failed to fetch user's templates"
+//	@Success		200	{array}		responses.Template	"Successfully fetched user's templates"
+//	@Failure		400	{object}	errorsx.HTTPError	"Invalid authentication token"
+//	@Failure		500	{object}	errorsx.HTTPError	"Internal server error"
 //	@Router			/private/templates [get]
 func (th *templatesHandler) GetAllForUser(c echo.Context) error {
 	userIdRaw := c.Get("userId").(string)
@@ -105,9 +106,9 @@ func (th *templatesHandler) GetAllForUser(c echo.Context) error {
 //	@Tags			templates
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{array}		responses.GeneratedData		"Successfully generated data"
-//	@Failure		400	{object}	responses.ErrorResponse	"Failed to parse param / request"
-//	@Failure		500	{object}	responses.ErrorResponse	"Failed to generate data"
+//	@Success		200	{array}		responses.GeneratedData	"Successfully generated data"
+//	@Failure		400	{object}	errorsx.HTTPError		"Invalid template id / Invalid request body / Template not found"
+//	@Failure		500	{object}	errorsx.HTTPError		"Internal server error"
 //	@Router			/private/templates/:id/generate [post]
 func (th *templatesHandler) GenerateData(c echo.Context) error {
 	templateId, err := uuid.Parse(c.Param("id"))

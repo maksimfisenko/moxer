@@ -2,49 +2,58 @@ basePath: /api/v1
 consumes:
 - application/json
 definitions:
+  errorsx.HTTPError:
+    properties:
+      message:
+        example: error
+        type: string
+    required:
+    - message
+    type: object
   requests.CreateTemplateRequest:
+    description: Request used for creating a new template
+    properties:
+      content:
+        additionalProperties: {}
+        type: object
+        x-order: "1"
+      name:
+        example: user
+        type: string
+        x-order: "0"
+    required:
+    - content
+    - name
     type: object
-  requests.LoginRequest:
-    description: Login request
+  requests.CredentialsRequest:
+    description: Request containing user credentials used for registration and logging
+      in
     properties:
       email:
-        example: fisenkomaksim.id@gmail.com
+        example: email@example.com
         type: string
         x-order: "0"
       password:
-        example: "11111111"
+        example: Str0ngPassWoRD
         type: string
         x-order: "1"
     required:
     - email
     - password
     type: object
-  requests.RegisterRequest:
-    description: Register request
+  responses.GeneratedData:
+    description: Generated Data response
     properties:
-      email:
-        example: fisenkomaksim.id@gmail.com
-        type: string
-        x-order: "0"
-      password:
-        example: "11111111"
-        type: string
-        x-order: "1"
+      data:
+        items:
+          additionalProperties: {}
+          type: object
+        type: array
     required:
-    - email
-    - password
+    - data
     type: object
-  responses.ErrorResponse:
-    description: Error response
-    properties:
-      error:
-        example: error message
-        type: string
-    required:
-    - error
-    type: object
-  responses.HealthcheckResponse:
-    description: Healthcheck response
+  responses.HealthCheckResponse:
+    description: Response used for the healthcheck requests
     properties:
       status:
         example: ok
@@ -53,7 +62,7 @@ definitions:
     - status
     type: object
   responses.Template:
-    description: Template response
+    description: Responses containing information about a template
     properties:
       content:
         additionalProperties: {}
@@ -83,24 +92,23 @@ definitions:
     - updated_at
     type: object
   responses.Token:
-    description: JWT Token
+    description: Response containing a unique generated JWT token
     properties:
       token:
-        example: eyJhbGciOi...
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30
         type: string
-        x-order: "0"
     required:
     - token
     type: object
   responses.UserResponse:
-    description: User response without password
+    description: Response containing information about user (without password)
     properties:
       created_at:
         example: "2025-07-09T18:43:23.239168298+03:00"
         type: string
         x-order: "2"
       email:
-        example: fisenkomaksim.id@gmail.com
+        example: email@example.com
         type: string
         x-order: "1"
       id:
@@ -126,42 +134,12 @@ info:
   title: Moxer API
   version: "1.0"
 paths:
-  /auth/login:
-    post:
-      consumes:
-      - application/json
-      description: Login new user by given credentials (email, password)
-      operationId: login
-      parameters:
-      - description: Login request
-        in: body
-        name: credentials
-        required: true
-        schema:
-          $ref: '#/definitions/requests.LoginRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Sucessfully registered new user
-          schema:
-            $ref: '#/definitions/responses.Token'
-        "400":
-          description: Failed to parse request body
-          schema:
-            $ref: '#/definitions/responses.ErrorResponse'
-        "500":
-          description: Failed to login
-          schema:
-            $ref: '#/definitions/responses.ErrorResponse'
-      summary: Login
-      tags:
-      - auth
-  /auth/me:
+  /private/auth/me:
     get:
       consumes:
       - application/json
-      description: Get current user by JWT token in Authorization header
+      description: Get information about current user using a JWT token in Authorization
+        header
       operationId: me
       produces:
       - application/json
@@ -171,66 +149,21 @@ paths:
           schema:
             $ref: '#/definitions/responses.UserResponse'
         "400":
-          description: Failed to parse token
+          description: Invalid authentication token / User not found
           schema:
-            $ref: '#/definitions/responses.ErrorResponse'
+            $ref: '#/definitions/errorsx.HTTPError'
         "500":
-          description: Failed to fetch current user
+          description: Internal server error
           schema:
-            $ref: '#/definitions/responses.ErrorResponse'
-      summary: Get current user
+            $ref: '#/definitions/errorsx.HTTPError'
+      summary: Get Current User
       tags:
       - auth
-  /auth/register:
-    post:
-      consumes:
-      - application/json
-      description: Register new user by given credentials (email, password)
-      operationId: register
-      parameters:
-      - description: Register request
-        in: body
-        name: credentials
-        required: true
-        schema:
-          $ref: '#/definitions/requests.RegisterRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Sucessfully registered new user
-          schema:
-            $ref: '#/definitions/responses.UserResponse'
-        "400":
-          description: Failed to parse request body
-          schema:
-            $ref: '#/definitions/responses.ErrorResponse'
-        "500":
-          description: Failed to register
-          schema:
-            $ref: '#/definitions/responses.ErrorResponse'
-      summary: Register
-      tags:
-      - auth
-  /healthz:
-    get:
-      description: Check if the application is up
-      operationId: health-check
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Sucessfully received response from server
-          schema:
-            $ref: '#/definitions/responses.HealthcheckResponse'
-      summary: Health Check
-      tags:
-      - health
-  /templates:
+  /private/templates:
     get:
       consumes:
       - application/json
-      description: Get all templates of certain user by given JWT token
+      description: Get all templates for a certain user by their JWT token
       operationId: get-all-for-user
       produces:
       - application/json
@@ -242,14 +175,14 @@ paths:
               $ref: '#/definitions/responses.Template'
             type: array
         "400":
-          description: Failed to parse token
+          description: Invalid authentication token
           schema:
-            $ref: '#/definitions/responses.ErrorResponse'
+            $ref: '#/definitions/errorsx.HTTPError'
         "500":
-          description: Failed to fetch user's templates
+          description: Internal server error
           schema:
-            $ref: '#/definitions/responses.ErrorResponse'
-      summary: Get user's templates
+            $ref: '#/definitions/errorsx.HTTPError'
+      summary: Get User's Template
       tags:
       - templates
     post:
@@ -272,16 +205,127 @@ paths:
           schema:
             $ref: '#/definitions/responses.Template'
         "400":
-          description: Failed to parse request body or token
+          description: Invalid authentication token / Invalid request body / User
+            not found
           schema:
-            $ref: '#/definitions/responses.ErrorResponse'
+            $ref: '#/definitions/errorsx.HTTPError'
+        "409":
+          description: Template with given name already exists
+          schema:
+            $ref: '#/definitions/errorsx.HTTPError'
         "500":
-          description: Failed to create new template
+          description: Internal server error
           schema:
-            $ref: '#/definitions/responses.ErrorResponse'
-      summary: Create template
+            $ref: '#/definitions/errorsx.HTTPError'
+      summary: Create Template
       tags:
       - templates
+  /private/templates/:id/generate:
+    post:
+      consumes:
+      - application/json
+      description: Generate data for a selected template
+      operationId: generate-data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully generated data
+          schema:
+            items:
+              $ref: '#/definitions/responses.GeneratedData'
+            type: array
+        "400":
+          description: Invalid template id / Invalid request body / Template not found
+          schema:
+            $ref: '#/definitions/errorsx.HTTPError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorsx.HTTPError'
+      summary: Generate Data
+      tags:
+      - templates
+  /public/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Get a JWT token for a user by their credentials
+      operationId: login
+      parameters:
+      - description: User's credentials used for logging in
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CredentialsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucessfully logged in a user
+          schema:
+            $ref: '#/definitions/responses.Token'
+        "400":
+          description: Invalid request body / User not found
+          schema:
+            $ref: '#/definitions/errorsx.HTTPError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorsx.HTTPError'
+      summary: Login
+      tags:
+      - auth
+  /public/auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user by given credentials
+      operationId: register
+      parameters:
+      - description: New user credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CredentialsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucessfully registered new user
+          schema:
+            $ref: '#/definitions/responses.UserResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/errorsx.HTTPError'
+        "409":
+          description: User already exists
+          schema:
+            $ref: '#/definitions/errorsx.HTTPError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorsx.HTTPError'
+      summary: Register
+      tags:
+      - auth
+  /public/healthz:
+    get:
+      description: Check if the application is up
+      operationId: health-check
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sucessfully received response from the server
+          schema:
+            $ref: '#/definitions/responses.HealthCheckResponse'
+      summary: Health Check
+      tags:
+      - health
 produces:
 - application/json
 swagger: "2.0"

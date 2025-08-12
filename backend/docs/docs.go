@@ -24,56 +24,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/login": {
-            "post": {
-                "description": "Login new user by given credentials (email, password)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Login",
-                "operationId": "login",
-                "parameters": [
-                    {
-                        "description": "Login request",
-                        "name": "credentials",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/requests.LoginRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Sucessfully registered new user",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Token"
-                        }
-                    },
-                    "400": {
-                        "description": "Failed to parse request body",
-                        "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Failed to login",
-                        "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/me": {
+        "/private/auth/me": {
             "get": {
-                "description": "Get current user by JWT token in Authorization header",
+                "description": "Get information about current user using a JWT token in Authorization header",
                 "consumes": [
                     "application/json"
                 ],
@@ -83,7 +36,7 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "Get current user",
+                "summary": "Get Current User",
                 "operationId": "me",
                 "responses": {
                     "200": {
@@ -93,91 +46,23 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Failed to parse token",
+                        "description": "Invalid authentication token / User not found",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/errorsx.HTTPError"
                         }
                     },
                     "500": {
-                        "description": "Failed to fetch current user",
+                        "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/errorsx.HTTPError"
                         }
                     }
                 }
             }
         },
-        "/auth/register": {
-            "post": {
-                "description": "Register new user by given credentials (email, password)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Register",
-                "operationId": "register",
-                "parameters": [
-                    {
-                        "description": "Register request",
-                        "name": "credentials",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/requests.RegisterRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Sucessfully registered new user",
-                        "schema": {
-                            "$ref": "#/definitions/responses.UserResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Failed to parse request body",
-                        "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Failed to register",
-                        "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/healthz": {
+        "/private/templates": {
             "get": {
-                "description": "Check if the application is up",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "health"
-                ],
-                "summary": "Health Check",
-                "operationId": "health-check",
-                "responses": {
-                    "200": {
-                        "description": "Sucessfully received response from server",
-                        "schema": {
-                            "$ref": "#/definitions/responses.HealthcheckResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/templates": {
-            "get": {
-                "description": "Get all templates of certain user by given JWT token",
+                "description": "Get all templates for a certain user by their JWT token",
                 "consumes": [
                     "application/json"
                 ],
@@ -187,7 +72,7 @@ const docTemplate = `{
                 "tags": [
                     "templates"
                 ],
-                "summary": "Get user's templates",
+                "summary": "Get User's Template",
                 "operationId": "get-all-for-user",
                 "responses": {
                     "200": {
@@ -200,15 +85,15 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Failed to parse token",
+                        "description": "Invalid authentication token",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/errorsx.HTTPError"
                         }
                     },
                     "500": {
-                        "description": "Failed to fetch user's templates",
+                        "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/errorsx.HTTPError"
                         }
                     }
                 }
@@ -224,7 +109,7 @@ const docTemplate = `{
                 "tags": [
                     "templates"
                 ],
-                "summary": "Create template",
+                "summary": "Create Template",
                 "operationId": "create-template",
                 "parameters": [
                     {
@@ -245,15 +130,181 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Failed to parse request body or token",
+                        "description": "Invalid authentication token / Invalid request body / User not found",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/errorsx.HTTPError"
+                        }
+                    },
+                    "409": {
+                        "description": "Template with given name already exists",
+                        "schema": {
+                            "$ref": "#/definitions/errorsx.HTTPError"
                         }
                     },
                     "500": {
-                        "description": "Failed to create new template",
+                        "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/responses.ErrorResponse"
+                            "$ref": "#/definitions/errorsx.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/private/templates/:id/generate": {
+            "post": {
+                "description": "Generate data for a selected template",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templates"
+                ],
+                "summary": "Generate Data",
+                "operationId": "generate-data",
+                "responses": {
+                    "200": {
+                        "description": "Successfully generated data",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.GeneratedData"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid template id / Invalid request body / Template not found",
+                        "schema": {
+                            "$ref": "#/definitions/errorsx.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errorsx.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/public/auth/login": {
+            "post": {
+                "description": "Get a JWT token for a user by their credentials",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "description": "User's credentials used for logging in",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CredentialsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully logged in a user",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Token"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body / User not found",
+                        "schema": {
+                            "$ref": "#/definitions/errorsx.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errorsx.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/public/auth/register": {
+            "post": {
+                "description": "Register a new user by given credentials",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register",
+                "operationId": "register",
+                "parameters": [
+                    {
+                        "description": "New user credentials",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CredentialsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully registered new user",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/errorsx.HTTPError"
+                        }
+                    },
+                    "409": {
+                        "description": "User already exists",
+                        "schema": {
+                            "$ref": "#/definitions/errorsx.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errorsx.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/public/healthz": {
+            "get": {
+                "description": "Check if the application is up",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Health Check",
+                "operationId": "health-check",
+                "responses": {
+                    "200": {
+                        "description": "Sucessfully received response from the server",
+                        "schema": {
+                            "$ref": "#/definitions/responses.HealthCheckResponse"
                         }
                     }
                 }
@@ -261,11 +312,40 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "errorsx.HTTPError": {
+            "type": "object",
+            "required": [
+                "message"
+            ],
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
         "requests.CreateTemplateRequest": {
-            "type": "object"
+            "description": "Request used for creating a new template",
+            "type": "object",
+            "required": [
+                "content",
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "x-order": "0",
+                    "example": "user"
+                },
+                "content": {
+                    "type": "object",
+                    "additionalProperties": {},
+                    "x-order": "1"
+                }
+            }
         },
-        "requests.LoginRequest": {
-            "description": "Login request",
+        "requests.CredentialsRequest": {
+            "description": "Request containing user credentials used for registration and logging in",
             "type": "object",
             "required": [
                 "email",
@@ -275,50 +355,33 @@ const docTemplate = `{
                 "email": {
                     "type": "string",
                     "x-order": "0",
-                    "example": "fisenkomaksim.id@gmail.com"
+                    "example": "email@example.com"
                 },
                 "password": {
                     "type": "string",
                     "x-order": "1",
-                    "example": "11111111"
+                    "example": "Str0ngPassWoRD"
                 }
             }
         },
-        "requests.RegisterRequest": {
-            "description": "Register request",
+        "responses.GeneratedData": {
+            "description": "Generated Data response",
             "type": "object",
             "required": [
-                "email",
-                "password"
+                "data"
             ],
             "properties": {
-                "email": {
-                    "type": "string",
-                    "x-order": "0",
-                    "example": "fisenkomaksim.id@gmail.com"
-                },
-                "password": {
-                    "type": "string",
-                    "x-order": "1",
-                    "example": "11111111"
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": {}
+                    }
                 }
             }
         },
-        "responses.ErrorResponse": {
-            "description": "Error response",
-            "type": "object",
-            "required": [
-                "error"
-            ],
-            "properties": {
-                "error": {
-                    "type": "string",
-                    "example": "error message"
-                }
-            }
-        },
-        "responses.HealthcheckResponse": {
-            "description": "Healthcheck response",
+        "responses.HealthCheckResponse": {
+            "description": "Response used for the healthcheck requests",
             "type": "object",
             "required": [
                 "status"
@@ -331,7 +394,7 @@ const docTemplate = `{
             }
         },
         "responses.Template": {
-            "description": "Template response",
+            "description": "Responses containing information about a template",
             "type": "object",
             "required": [
                 "content",
@@ -369,7 +432,7 @@ const docTemplate = `{
             }
         },
         "responses.Token": {
-            "description": "JWT Token",
+            "description": "Response containing a unique generated JWT token",
             "type": "object",
             "required": [
                 "token"
@@ -377,13 +440,12 @@ const docTemplate = `{
             "properties": {
                 "token": {
                     "type": "string",
-                    "x-order": "0",
-                    "example": "eyJhbGciOi..."
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
                 }
             }
         },
         "responses.UserResponse": {
-            "description": "User response without password",
+            "description": "Response containing information about user (without password)",
             "type": "object",
             "required": [
                 "created_at",
@@ -400,7 +462,7 @@ const docTemplate = `{
                 "email": {
                     "type": "string",
                     "x-order": "1",
-                    "example": "fisenkomaksim.id@gmail.com"
+                    "example": "email@example.com"
                 },
                 "created_at": {
                     "type": "string",

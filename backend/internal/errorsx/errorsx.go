@@ -19,9 +19,9 @@ var (
 	ErrInternalServerHTTP     = echo.NewHTTPError(http.StatusInternalServerError, "internal server error")
 	ErrUserNotFoundHTTP       = echo.NewHTTPError(http.StatusBadRequest, "user not found")
 	ErrInvalidTokenHTTP       = echo.NewHTTPError(http.StatusBadRequest, "invalid authentication token")
-	ErrInvalidTemplateIdHTTP  = echo.NewHTTPError(http.StatusBadRequest, "invalid template id parameter")
+	ErrInvalidTemplateIdHTTP  = echo.NewHTTPError(http.StatusBadRequest, "invalid template id")
 	ErrTemplateNotFoundHTTP   = echo.NewHTTPError(http.StatusBadRequest, "template not found")
-	ErrTemplateExistsHTTP     = echo.NewHTTPError(http.StatusBadRequest, "template with given name already exists")
+	ErrTemplateExistsHTTP     = echo.NewHTTPError(http.StatusConflict, "template with given name already exists")
 )
 
 type Errorx struct {
@@ -52,4 +52,8 @@ func Is(err error, code string) bool {
 		return errorx.Code == code
 	}
 	return false
+}
+
+type HTTPError struct {
+	Message string `validate:"required" json:"message" example:"error"`
 }

@@ -13,7 +13,7 @@ const useGenerateData = () => {
     mutationKey: ["generate-data"],
     mutationFn: async ({ id, req }) => {
       const response = await api.post<GeneratedData>(
-        `api/v1/templates/${id}/generate`,
+        `api/v1/private/templates/${id}/generate`,
         req
       );
       return response.data;
