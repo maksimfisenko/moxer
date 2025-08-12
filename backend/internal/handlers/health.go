@@ -24,9 +24,8 @@ func NewHealthHandler(public *echo.Group) *healthHandler {
 //	@ID				health-check
 //	@Tags			health
 //	@Produce		json
-//	@Success		200	{object}	responses.HealthcheckResponse "Sucessfully received response from server"
-//	@Router			/healthz [get]
+//	@Success		200	{object}	responses.HealthCheckResponse "Sucessfully received response from the server"
+//	@Router			/public/healthz [get]
 func (hh *healthHandler) HealthCheck(c echo.Context) error {
-	resp := responses.HealthcheckResponse{Status: "ok"}
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(http.StatusOK, responses.HealthCheckResponse{Status: "ok"})
 }

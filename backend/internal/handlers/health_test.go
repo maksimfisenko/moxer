@@ -14,8 +14,8 @@ import (
 func TestHealthCheck(t *testing.T) {
 	// Arrange
 	e := echo.New()
-	g := e.Group("/api/v1/public")
-	handler := NewHealthHandler(g)
+	public := e.Group("/api/v1/public")
+	handler := NewHealthHandler(public)
 
 	req := httptest.NewRequest(http.MethodGet, "/healthz", nil)
 	rec := httptest.NewRecorder()
@@ -29,7 +29,7 @@ func TestHealthCheck(t *testing.T) {
 	// Assert
 	assert.Equal(t, http.StatusOK, rec.Code)
 
-	var resp responses.HealthcheckResponse
+	var resp responses.HealthCheckResponse
 	err := json.Unmarshal(rec.Body.Bytes(), &resp)
 	assert.NoError(t, err)
 

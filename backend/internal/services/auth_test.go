@@ -76,7 +76,7 @@ func TestAuthService_Login(t *testing.T) {
 
 	_, _ = service.Register(userDTO)
 
-	_, err := service.Login(&dto.UserCredentials{
+	_, err := service.Login(&dto.Credentials{
 		Email:    "test@example.com",
 		Password: "11111111"},
 	)
@@ -84,7 +84,7 @@ func TestAuthService_Login(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 
-	_, err = service.Login(&dto.UserCredentials{
+	_, err = service.Login(&dto.Credentials{
 		Email:    "test1@example.com",
 		Password: "11111111"},
 	)
@@ -92,7 +92,7 @@ func TestAuthService_Login(t *testing.T) {
 		t.Error("expected error for non-existent user but got none")
 	}
 
-	_, err = service.Login(&dto.UserCredentials{
+	_, err = service.Login(&dto.Credentials{
 		Email:    "test@example.com",
 		Password: "00000000"},
 	)

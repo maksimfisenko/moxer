@@ -14,7 +14,7 @@ type User struct {
 	UpdatedAt time.Time
 }
 
-type UserCredentials struct {
+type Credentials struct {
 	Email    string
 	Password string
 }

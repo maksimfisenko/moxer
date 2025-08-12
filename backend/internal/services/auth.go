@@ -39,7 +39,7 @@ func (as *authService) Register(userDTO *dto.User) (*dto.User, error) {
 	return mapper.FromUserEntityToUserDTO(entity), nil
 }
 
-func (as *authService) Login(credentials *dto.UserCredentials) (*dto.Token, error) {
+func (as *authService) Login(credentials *dto.Credentials) (*dto.Token, error) {
 	user, err := as.usersRepo.FindByEmail(credentials.Email)
 	if err != nil {
 		return nil, errorsx.New("internal_error", "failed to find user by email", err)

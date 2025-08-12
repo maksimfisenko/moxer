@@ -32,25 +32,23 @@ func NewAuthHandler(public, private *echo.Group, authService services.AuthServic
 // Register godoc
 //
 //	@Summary		Register
-//	@Description	Register new user by given credentials (email, password)
+//	@Description	Register a new user by given credentials
 //	@ID				register
 //	@Tags			auth
 //	@Accept			json
 //	@Produce		json
-//	@Param			credentials	body		requests.RegisterRequest	true	"Register request"
+//	@Param			credentials	body		requests.CredentialsRequest	true	"New user credentials"
 //	@Success		200			{object}	responses.UserResponse		"Sucessfully registered new user"
 //	@Failure		400			{object}	responses.ErrorResponse		"Failed to parse request body"
 //	@Failure		500			{object}	responses.ErrorResponse		"Failed to register"
-//	@Router			/auth/register [post]
+//	@Router			/public/auth/register [post]
 func (ah *authHandler) Register(c echo.Context) error {
-	var req requests.RegisterRequest
+	var req requests.CredentialsRequest
 	if err := c.Bind(&req); err != nil {
 		return errorsx.ErrInvalidRequestBodyHTTP
 	}
 
-	dto := mapper.FromRegisterRequestToUserDTO(&req)
-
-	dto, err := ah.authService.Register(dto)
+	dto, err := ah.authService.Register(mapper.FromCredentialsRequestToUserDTO(&req))
 	if err != nil {
 		switch {
 		case errorsx.Is(err, "user_exists"):
@@ -61,33 +59,29 @@ func (ah *authHandler) Register(c echo.Context) error {
 		}
 	}
 
-	resp := mapper.FromUserDTOToUserResponse(dto)
-
-	return c.JSON(http.StatusCreated, resp)
+	return c.JSON(http.StatusCreated, mapper.FromUserDTOToUserResponse(dto))
 }
 
 // Login godoc
 //
 //	@Summary		Login
-//	@Description	Login new user by given credentials (email, password)
+//	@Description	Get a JWT token for a user by their credentials
 //	@ID				login
 //	@Tags			auth
 //	@Accept			json
 //	@Produce		json
-//	@Param			credentials	body		requests.LoginRequest	true	"Login request"
-//	@Success		200			{object}	responses.Token			"Sucessfully registered new user"
+//	@Param			credentials	body		requests.CredentialsRequest	true	"User's credentials used for logging in"
+//	@Success		200			{object}	responses.Token			"Sucessfully logged in a user"
 //	@Failure		400			{object}	responses.ErrorResponse	"Failed to parse request body"
 //	@Failure		500			{object}	responses.ErrorResponse	"Failed to login"
-//	@Router			/auth/login [post]
+//	@Router			/public/auth/login [post]
 func (ah *authHandler) Login(c echo.Context) error {
-	var req requests.LoginRequest
+	var req requests.CredentialsRequest
 	if err := c.Bind(&req); err != nil {
 		return errorsx.ErrInvalidRequestBodyHTTP
 	}
 
-	credentialsDTO := mapper.FromLoginRequestToUserCredentialsDTO(&req)
-
-	tokenDTO, err := ah.authService.Login(credentialsDTO)
+	tokenDTO, err := ah.authService.Login(mapper.FromLoginRequestToUserCredentialsDTO(&req))
 	if err != nil {
 		switch {
 		case errorsx.Is(err, "user_not_found"):
@@ -98,15 +92,13 @@ func (ah *authHandler) Login(c echo.Context) error {
 		}
 	}
 
-	resp := mapper.FromTokenDTOToTokenResponse(tokenDTO)
-
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(http.StatusOK, mapper.FromTokenDTOToTokenResponse(tokenDTO))
 }
 
 // GetCurrentUser godoc
 //
-//	@Summary		Get current user
-//	@Description	Get current user by JWT token in Authorization header
+//	@Summary		Get Current User
+//	@Description	Get information about current user using a JWT token in Authorization header
 //	@ID				me
 //	@Tags			auth
 //	@Accept			json
@@ -133,7 +125,5 @@ func (ah *authHandler) GetCurrentUser(c echo.Context) error {
 		}
 	}
 
-	resp := mapper.FromUserDTOToUserResponse(userDTO)
-
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(http.StatusOK, mapper.FromUserDTOToUserResponse(userDTO))
 }

@@ -38,7 +38,7 @@ func (s *MockAuthService) Register(userDTO *dto.User) (*dto.User, error) {
 	return mapper.FromUserEntityToUserDTO(user), nil
 }
 
-func (s *MockAuthService) Login(credentials *dto.UserCredentials) (*dto.Token, error) {
+func (s *MockAuthService) Login(credentials *dto.Credentials) (*dto.Token, error) {
 	for _, user := range s.users {
 		if user.Email == credentials.Email && user.PasswordHash == credentials.Password+"_hash" {
 			return &dto.Token{Token: "12345"}, nil
@@ -65,7 +65,7 @@ func TestRegister(t *testing.T) {
 	mockAuthService := NewMockAuthService()
 	handler := NewAuthHandler(public, private, mockAuthService)
 
-	registerReq := requests.RegisterRequest{
+	registerReq := requests.CredentialsRequest{
 		Email:    "email@example.com",
 		Password: "11111111",
 	}
@@ -103,13 +103,13 @@ func TestLogin(t *testing.T) {
 
 	handler := NewAuthHandler(public, private, mockAuthService)
 
-	registerReq := requests.RegisterRequest{
+	registerReq := requests.CredentialsRequest{
 		Email:    "email@example.com",
 		Password: "11111111",
 	}
-	userDTO := mapper2.FromRegisterRequestToUserDTO(&registerReq)
+	userDTO := mapper2.FromCredentialsRequestToUserDTO(&registerReq)
 
-	loginReq := requests.LoginRequest{
+	loginReq := requests.CredentialsRequest{
 		Email:    "email@example.com",
 		Password: "11111111",
 	}
@@ -149,11 +149,11 @@ func TestGetCurrentUser(t *testing.T) {
 
 	handler := NewAuthHandler(public, private, mockAuthService)
 
-	registerReq := requests.RegisterRequest{
+	registerReq := requests.CredentialsRequest{
 		Email:    "email@example.com",
 		Password: "11111111",
 	}
-	userDTO := mapper2.FromRegisterRequestToUserDTO(&registerReq)
+	userDTO := mapper2.FromCredentialsRequestToUserDTO(&registerReq)
 
 	_, err := mockAuthService.Register(userDTO)
 	assert.NoError(t, err)

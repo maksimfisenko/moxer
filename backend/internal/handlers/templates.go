@@ -30,7 +30,7 @@ func NewTemplatesHandler(private *echo.Group, templatesService services.Template
 
 // CreateTemplate godoc
 //
-//	@Summary		Create template
+//	@Summary		Create Template
 //	@Description	Create a new template with provided request body and user id
 //	@ID				create-template
 //	@Tags			templates
@@ -40,7 +40,7 @@ func NewTemplatesHandler(private *echo.Group, templatesService services.Template
 //	@Success		200		{object}	responses.Template				"Sucessfully created new template"
 //	@Failure		400		{object}	responses.ErrorResponse			"Failed to parse request body or token"
 //	@Failure		500		{object}	responses.ErrorResponse			"Failed to create new template"
-//	@Router			/templates [post]
+//	@Router			/private/templates [post]
 func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 	userIdRaw := c.Get("userId").(string)
 	userId, err := uuid.Parse(userIdRaw)
@@ -53,9 +53,7 @@ func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 		return errorsx.ErrInvalidRequestBodyHTTP
 	}
 
-	dto := mapper.FromCreateTemplateRequestToTemplateDTO(&req, userId)
-
-	dto, err = th.templatesService.Create(dto)
+	dto, err := th.templatesService.Create(mapper.FromCreateTemplateRequestToTemplateDTO(&req, userId))
 	if err != nil {
 		switch {
 		case errorsx.Is(err, "template_exists"):
@@ -68,15 +66,13 @@ func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 		}
 	}
 
-	resp := mapper.FromTemplateDTOToTemplateResponse(dto)
-
-	return c.JSON(http.StatusCreated, resp)
+	return c.JSON(http.StatusCreated, mapper.FromTemplateDTOToTemplateResponse(dto))
 }
 
 // GetAllForUser godoc
 //
-//	@Summary		Get user's templates
-//	@Description	Get all templates of certain user by given JWT token
+//	@Summary		Get User's Template
+//	@Description	Get all templates for a certain user by their JWT token
 //	@ID				get-all-for-user
 //	@Tags			templates
 //	@Accept			json
@@ -84,7 +80,7 @@ func (th *templatesHandler) CreateTemplate(c echo.Context) error {
 //	@Success		200	{array}		responses.Template		"Successfully fetched user's templates"
 //	@Failure		400	{object}	responses.ErrorResponse	"Failed to parse token"
 //	@Failure		500	{object}	responses.ErrorResponse	"Failed to fetch user's templates"
-//	@Router			/templates [get]
+//	@Router			/private/templates [get]
 func (th *templatesHandler) GetAllForUser(c echo.Context) error {
 	userIdRaw := c.Get("userId").(string)
 	userId, err := uuid.Parse(userIdRaw)
@@ -98,23 +94,21 @@ func (th *templatesHandler) GetAllForUser(c echo.Context) error {
 		return errorsx.ErrInternalServerHTTP
 	}
 
-	resp := mapper.FromTemplateDTOListToTemplateResponseList(dtoList)
-
-	return c.JSON(http.StatusOK, resp)
+	return c.JSON(http.StatusOK, mapper.FromTemplateDTOListToTemplateResponseList(dtoList))
 }
 
 // GenerateData godoc
 //
-//	@Summary		Generate data
-//	@Description	Generate data from template
+//	@Summary		Generate Data
+//	@Description	Generate data for a selected template
 //	@ID				generate-data
 //	@Tags			templates
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{array}		responses.Template		"Successfully generated data from template"
+//	@Success		200	{array}		responses.GeneratedData		"Successfully generated data"
 //	@Failure		400	{object}	responses.ErrorResponse	"Failed to parse param / request"
 //	@Failure		500	{object}	responses.ErrorResponse	"Failed to generate data"
-//	@Router			/templates/:id/generate [post]
+//	@Router			/private/templates/:id/generate [post]
 func (th *templatesHandler) GenerateData(c echo.Context) error {
 	templateId, err := uuid.Parse(c.Param("id"))
 	if err != nil {
@@ -137,7 +131,5 @@ func (th *templatesHandler) GenerateData(c echo.Context) error {
 		}
 	}
 
-	resp := mapper.FromGeneratedDataDTOToGeneratedDataResponse(dto)
-
-	return c.JSON(http.StatusCreated, resp)
+	return c.JSON(http.StatusCreated, mapper.FromGeneratedDataDTOToGeneratedDataResponse(dto))
 }

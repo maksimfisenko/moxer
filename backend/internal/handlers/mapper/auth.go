@@ -9,11 +9,11 @@ import (
 	"github.com/maksimfisenko/moxer/internal/services/dto"
 )
 
-func FromRegisterRequestToUserDTO(req *requests.RegisterRequest) *dto.User {
+func FromCredentialsRequestToUserDTO(cred *requests.CredentialsRequest) *dto.User {
 	return &dto.User{
 		Id:        uuid.New(),
-		Email:     req.Email,
-		Password:  req.Password,
+		Email:     cred.Email,
+		Password:  cred.Password,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -28,8 +28,8 @@ func FromUserDTOToUserResponse(dto *dto.User) *responses.UserResponse {
 	}
 }
 
-func FromLoginRequestToUserCredentialsDTO(req *requests.LoginRequest) *dto.UserCredentials {
-	return &dto.UserCredentials{
+func FromLoginRequestToUserCredentialsDTO(req *requests.CredentialsRequest) *dto.Credentials {
+	return &dto.Credentials{
 		Email:    req.Email,
 		Password: req.Password,
 	}

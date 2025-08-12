@@ -10,15 +10,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFromRegisterRequestToUserDTO(t *testing.T) {
+func TestFromCredentialsToUserDTO(t *testing.T) {
 	// Arrange
-	req := &requests.RegisterRequest{
+	req := &requests.CredentialsRequest{
 		Email:    "test@example.com",
 		Password: "password",
 	}
 
 	// Act
-	dto := FromRegisterRequestToUserDTO(req)
+	dto := FromCredentialsRequestToUserDTO(req)
 
 	// Assert
 	assert.NotNil(t, dto)
@@ -49,9 +49,9 @@ func TestFromUserDTOToUserResponse(t *testing.T) {
 	assert.Equal(t, dto.UpdatedAt, resp.UpdatedAt)
 }
 
-func TestFromLoginRequestToUserCredentialsDTO(t *testing.T) {
+func TestFromCredentialsToUserCredentialsDTO(t *testing.T) {
 	// Arrange
-	req := &requests.LoginRequest{
+	req := &requests.CredentialsRequest{
 		Email:    "test@example.com",
 		Password: "password",
 	}

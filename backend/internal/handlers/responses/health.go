@@ -1,6 +1,6 @@
 package responses
 
-// @Description Healthcheck response
-type HealthcheckResponse struct {
-	Status string `json:"status" validate:"required" example:"ok"`
+// @Description Response used for the healthcheck requests
+type HealthCheckResponse struct {
+	Status string `validate:"required" json:"status" example:"ok"`
 }
