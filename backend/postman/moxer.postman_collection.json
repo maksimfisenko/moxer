@@ -15,11 +15,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/healthz",
+							"raw": "{{base-url}}/public/healthz",
 							"host": [
 								"{{base-url}}"
 							],
 							"path": [
+								"public",
 								"healthz"
 							]
 						}
@@ -46,11 +47,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base-url}}/auth/register",
+							"raw": "{{base-url}}/public/auth/register",
 							"host": [
 								"{{base-url}}"
 							],
 							"path": [
+								"public",
 								"auth",
 								"register"
 							]
@@ -89,11 +91,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base-url}}/auth/login",
+							"raw": "{{base-url}}/public/auth/login",
 							"host": [
 								"{{base-url}}"
 							],
 							"path": [
+								"public",
 								"auth",
 								"login"
 							]
@@ -117,11 +120,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/auth/me",
+							"raw": "{{base-url}}/private/auth/me",
 							"host": [
 								"{{base-url}}"
 							],
 							"path": [
+								"private",
 								"auth",
 								"me"
 							]
@@ -166,7 +170,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"user-template-3\",\n    \"content\": {\n        \"id\": \"{{uuid}}\",\n        \"name\": \"{{name}}\",\n        \"email\": \"{{email}}\",\n        \"password\": \"{{password}}\"\n    }\n}",
+							"raw": "{\n    \"name\": \"customer-template\",\n    \"content\": {\n        \"id\": \"customer-{{uuid}}\",\n        \"name\": \"{{name}}\",\n        \"personal_data\": {\n            \"email\": \"{{email}}\",\n            \"password\": \"{{password}}\"\n        }\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -174,11 +178,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base-url}}/templates",
+							"raw": "{{base-url}}/private/templates",
 							"host": [
 								"{{base-url}}"
 							],
 							"path": [
+								"private",
 								"templates"
 							]
 						}
@@ -201,11 +206,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base-url}}/templates",
+							"raw": "{{base-url}}/private/templates",
 							"host": [
 								"{{base-url}}"
 							],
 							"path": [
+								"private",
 								"templates"
 							]
 						}
@@ -237,11 +243,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base-url}}/templates/{{last-template-id}}/generate",
+							"raw": "{{base-url}}/private/templates/{{last-template-id}}/generate",
 							"host": [
 								"{{base-url}}"
 							],
 							"path": [
+								"private",
 								"templates",
 								"{{last-template-id}}",
 								"generate"
