@@ -1,16 +1,27 @@
 import {
+  Box,
   Button,
   Field,
   Fieldset,
   Flex,
   Input,
   Stack,
-  Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import type { CreateTemplateRequest } from "../types/types";
+import MonacoEditor from "react-monaco-editor";
+import * as monaco from "monaco-editor";
+
+monaco.editor.defineTheme("customGray", {
+  base: "vs",
+  inherit: true,
+  rules: [],
+  colors: {
+    "editor.background": "#f4f4f5",
+  },
+});
 
 const addTemplateFormSchema = z.object({
   name: z.string().min(4, "Template name should be at least 4 characters long"),
@@ -44,6 +55,8 @@ const AddTemplateForm = ({ isLoading, onFormSubmit }: AddTemplateFormProps) => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    watch,
   } = useForm<AddTemplateFormData>({
     resolver: zodResolver(addTemplateFormSchema),
   });
@@ -93,12 +106,49 @@ const AddTemplateForm = ({ isLoading, onFormSubmit }: AddTemplateFormProps) => {
                 <Field.Label>
                   Content <Field.RequiredIndicator />
                 </Field.Label>
-                <Textarea
-                  {...register("content")}
-                  placeholder="---"
-                  variant={"subtle"}
-                  size={"xl"}
-                />
+
+                <Box
+                  rounded="lg"
+                  overflow="hidden"
+                  w={"100%"}
+                  p={5}
+                  bgColor={"gray.100"}
+                >
+                  <MonacoEditor
+                    height={"250px"}
+                    language="json"
+                    theme={"customGray"}
+                    value={watch("content") || ""}
+                    onChange={(value) =>
+                      setValue("content", value || "", {
+                        shouldValidate: false,
+                      })
+                    }
+                    options={{
+                      folding: false,
+                      fontSize: 14,
+                      minimap: { enabled: false },
+                      formatOnPaste: true,
+                      formatOnType: true,
+                      lineNumbers: "off",
+                      overviewRulerLanes: 0,
+                      hideCursorInOverviewRuler: true,
+                      scrollbar: {
+                        verticalScrollbarSize: 0,
+                        horizontalScrollbarSize: 0,
+                      },
+                      scrollBeyondLastLine: false,
+                      lineDecorationsWidth: 0,
+                      glyphMargin: false,
+                      renderLineHighlight: "none",
+                      guides: {
+                        indentation: false,
+                        highlightActiveIndentation: false,
+                      },
+                    }}
+                  />
+                </Box>
+
                 <Field.ErrorText>"error"</Field.ErrorText>
               </Field.Root>
             </Fieldset.Content>
