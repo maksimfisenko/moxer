@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import type { CreateTemplateRequest } from "../types/types";
-import api from "@/config/api-client";
 import type { AxiosErrorResponseData } from "@/types/types";
+import privateAPI from "@/config/privateAPI";
 
 const useCreateTemplate = () => {
   return useMutation<
@@ -12,7 +12,7 @@ const useCreateTemplate = () => {
   >({
     mutationKey: ["create-template"],
     mutationFn: (req: CreateTemplateRequest) =>
-      api.post("api/v1/private/templates", req)
+      privateAPI.post("/templates", req),
   });
 };
 

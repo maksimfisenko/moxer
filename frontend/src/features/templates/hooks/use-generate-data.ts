@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import type { GenerateDataRequest, GeneratedData } from "../types/types";
-import api from "@/config/api-client";
 import type { AxiosErrorResponseData } from "@/types/types";
+import privateAPI from "@/config/privateAPI";
 
 const useGenerateData = () => {
   return useMutation<
@@ -12,8 +12,8 @@ const useGenerateData = () => {
   >({
     mutationKey: ["generate-data"],
     mutationFn: async ({ id, req }) => {
-      const response = await api.post<GeneratedData>(
-        `api/v1/private/templates/${id}/generate`,
+      const response = await privateAPI.post<GeneratedData>(
+        `/templates/${id}/generate`,
         req
       );
       return response.data;

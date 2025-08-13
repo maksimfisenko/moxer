@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import type { User } from "../types/types";
-import api from "@/config/api-client";
 import type { AxiosErrorResponseData } from "@/types/types";
+import privateAPI from "@/config/privateAPI";
 
 const useGetCurrentUser = () => {
   return useQuery<User, AxiosError<AxiosErrorResponseData>>({
     queryKey: ["me"],
-    queryFn: async () => (await api.get<User>("api/v1/private/auth/me")).data,
+    queryFn: async () => (await privateAPI.get<User>("/auth/me")).data,
     retry: 0,
   });
 };

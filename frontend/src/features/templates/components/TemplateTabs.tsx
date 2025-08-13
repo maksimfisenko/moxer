@@ -1,7 +1,7 @@
 import { Tabs } from "@chakra-ui/react";
 import type { GeneratedData, TemplateContent } from "../types/types";
-import TemplateContentPreview from "./TemplateContentPreview";
 import GeneratedDataPreview from "./GeneratedDataPreview";
+import JsonPreview from "./JsonView";
 
 interface TemplateTabsProps {
   content: TemplateContent;
@@ -28,7 +28,7 @@ const TemplateTabs = ({ content, generatedData }: TemplateTabsProps) => {
         flex={1}
         flexDirection={"column"}
       >
-        <TemplateContentPreview content={content} />
+        <JsonPreview content={content} />
       </Tabs.Content>
       <Tabs.Content
         value="data"

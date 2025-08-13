@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import type { GeneratedData } from "../types/types";
+import JsonView from "@uiw/react-json-view";
 
 interface GeneratedDataPreviewProps {
   data?: GeneratedData;
@@ -21,7 +22,18 @@ const GeneratedDataPreview = ({ data }: GeneratedDataPreviewProps) => {
       maxH={"345px"}
       overflowY={"auto"}
     >
-      {JSON.stringify(data?.data, null, 4)}
+      {data && (
+        <JsonView
+          value={data?.data}
+          indentWidth={16}
+          displayDataTypes={false}
+          collapsed={false}
+          enableClipboard={false}
+          displayObjectSize={false}
+          shortenTextAfterLength={100}
+          style={{ fontSize: "14px" }}
+        />
+      )}
     </Box>
   );
 };
