@@ -5,6 +5,7 @@ import {
   Fieldset,
   Flex,
   Input,
+  Link,
   Stack,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -148,6 +149,14 @@ const AddTemplateForm = ({ isLoading, onFormSubmit }: AddTemplateFormProps) => {
                     }}
                   />
                 </Box>
+                <Field.HelperText>
+                  <Link
+                    target="_blank"
+                    href="https://github.com/maksimfisenko/moxer?tab=readme-ov-file#sparkles-supported-template-variables"
+                  >
+                    Supported template variables
+                  </Link>
+                </Field.HelperText>
 
                 <Field.ErrorText>"error"</Field.ErrorText>
               </Field.Root>
