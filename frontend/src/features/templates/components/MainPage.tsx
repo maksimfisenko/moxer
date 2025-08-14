@@ -8,7 +8,11 @@ import { useQueryClient } from "@tanstack/react-query";
 const MainPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { data, isLoading, isError } = useGetCurrentUser();
+  const {
+    data: user,
+    isLoading: userIsLoading,
+    isError: userIsError,
+  } = useGetCurrentUser();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -16,25 +20,21 @@ const MainPage = () => {
     navigate("/login");
   };
 
-  if (isLoading)
+  if (userIsLoading)
     return (
       <Center w="100%">
         <Spinner size={"xl"} />
       </Center>
     );
 
-  if (isError) {
-    handleLogout();
-    return null;
-  }
-  if (!data) {
+  if (userIsError || !user) {
     handleLogout();
     return null;
   }
 
   return (
     <Flex h={"100%"} direction={"column"} bgColor={"gray.100"}>
-      <Header user={data} onButtonClick={handleLogout} />
+      <Header user={user} onButtonClick={handleLogout} />
       <Content />
     </Flex>
   );

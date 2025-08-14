@@ -10,25 +10,29 @@ import TemplateTabs from "./TemplateTabs";
 import { useGenerateData } from "../hooks/use-generate-data";
 import type { AxiosError } from "axios";
 import type { AxiosErrorResponseData } from "@/types/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface TemplatePreviewProps {
-  template: Template | null;
+  selectedTemplate: Template | null;
 }
 
-const TemplatePreview = ({ template }: TemplatePreviewProps) => {
+const TemplatePreview = ({ selectedTemplate }: TemplatePreviewProps) => {
   const { mutate, isPending } = useGenerateData();
-  const [data, setData] = useState<GeneratedData | null>(null);
+  const [generatedData, setGeneratedData] = useState<GeneratedData | null>(
+    null
+  );
+
+  useEffect(() => setGeneratedData(null), [selectedTemplate]);
 
   const handleGenerateData = (data: GenerateDataRequest) => {
     mutate(
       {
-        id: template?.id || "",
+        id: selectedTemplate?.id || "",
         req: data,
       },
       {
         onSuccess: (data) => {
-          setData(data);
+          setGeneratedData(data);
         },
         onError: (error: AxiosError<AxiosErrorResponseData>) => {
           console.log(error.response?.data.message);
@@ -39,23 +43,26 @@ const TemplatePreview = ({ template }: TemplatePreviewProps) => {
 
   return (
     <VStack pl={4} align={"stretch"} flex={1}>
-      {template ? (
+      {selectedTemplate ? (
         <>
           <Heading size={"xl"} mb={2.5}>
-            {template.name}
+            {selectedTemplate.name}
           </Heading>
           <Separator />
-          <TemplateInfo selectedTempl={template} />
+          <TemplateInfo selectedTemplate={selectedTemplate} />
           <Separator />
           <GenerateDataForm
             isLoading={isPending}
             onFormSubmit={handleGenerateData}
           />
           <Separator />
-          {data ? (
-            <TemplateTabs content={template.content} generatedData={data} />
+          {generatedData ? (
+            <TemplateTabs
+              selectedTemplate={selectedTemplate}
+              generatedData={generatedData}
+            />
           ) : (
-            <TemplateTabs content={template.content} />
+            <TemplateTabs selectedTemplate={selectedTemplate} />
           )}
         </>
       ) : (

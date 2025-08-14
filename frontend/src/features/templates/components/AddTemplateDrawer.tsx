@@ -9,11 +9,11 @@ import type { AxiosErrorResponseData } from "@/types/types";
 import { getFullErrorMessage } from "@/utils/utils";
 
 interface AddTemplateDrawerProps {
-  open: boolean;
+  isOpen: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddTemplateDrawer = ({ open, setOpen }: AddTemplateDrawerProps) => {
+const AddTemplateDrawer = ({ isOpen, setOpen }: AddTemplateDrawerProps) => {
   const { mutate, isPending } = useCreateTemplate();
   const queryClient = useQueryClient();
 
@@ -41,7 +41,7 @@ const AddTemplateDrawer = ({ open, setOpen }: AddTemplateDrawerProps) => {
   return (
     <>
       <Drawer.Root
-        open={open}
+        open={isOpen}
         onOpenChange={(e) => setOpen(e.open)}
         size={"full"}
         placement={"start"}

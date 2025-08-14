@@ -1,12 +1,12 @@
 import { Box } from "@chakra-ui/react";
 import type { TemplateContent } from "../types/types";
-import JsonView from "@uiw/react-json-view";
+import Json from "./Json";
 
-interface JsonPreviewProps {
+interface ContentPreviewProps {
   content: TemplateContent;
 }
 
-const JsonPreview = ({ content }: JsonPreviewProps) => {
+const ContentPreview = ({ content }: ContentPreviewProps) => {
   return (
     <Box
       display={"flex"}
@@ -22,18 +22,13 @@ const JsonPreview = ({ content }: JsonPreviewProps) => {
       maxH={"345px"}
       overflowY={"auto"}
     >
-      <JsonView
-        value={content}
-        indentWidth={16}
-        displayDataTypes={false}
-        collapsed={false}
-        enableClipboard={false}
-        displayObjectSize={false}
-        shortenTextAfterLength={100}
-        style={{ fontSize: "14px" }}
+      <Json
+        height={"100%"}
+        readOnly={true}
+        value={JSON.stringify(content, null, 4)}
       />
     </Box>
   );
 };
 
-export default JsonPreview;
+export default ContentPreview;

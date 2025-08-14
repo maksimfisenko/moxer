@@ -12,26 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import type { CreateTemplateRequest } from "../types/types";
-import MonacoEditor from "react-monaco-editor";
-import * as monaco from "monaco-editor";
-import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
-
-self.MonacoEnvironment = {
-  getWorker(_: any, __: any) {
-    return new jsonWorker();
-  },
-};
-
-monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
-
-monaco.editor.defineTheme("customGray", {
-  base: "vs",
-  inherit: true,
-  rules: [],
-  colors: {
-    "editor.background": "#f4f4f5",
-  },
-});
+import Json from "./Json";
 
 const addTemplateFormSchema = z.object({
   name: z.string().min(4, "Template name should be at least 4 characters long"),
@@ -123,38 +104,15 @@ const AddTemplateForm = ({ isLoading, onFormSubmit }: AddTemplateFormProps) => {
                   p={5}
                   bgColor={"gray.100"}
                 >
-                  <MonacoEditor
+                  <Json
                     height={"250px"}
-                    language="json"
-                    theme={"customGray"}
+                    readOnly={false}
                     value={watch("content") || ""}
                     onChange={(value) =>
                       setValue("content", value || "", {
                         shouldValidate: false,
                       })
                     }
-                    options={{
-                      folding: false,
-                      fontSize: 14,
-                      minimap: { enabled: false },
-                      formatOnPaste: true,
-                      formatOnType: true,
-                      lineNumbers: "off",
-                      overviewRulerLanes: 0,
-                      hideCursorInOverviewRuler: true,
-                      scrollbar: {
-                        verticalScrollbarSize: 0,
-                        horizontalScrollbarSize: 0,
-                      },
-                      scrollBeyondLastLine: false,
-                      lineDecorationsWidth: 0,
-                      glyphMargin: false,
-                      renderLineHighlight: "none",
-                      guides: {
-                        indentation: false,
-                        highlightActiveIndentation: false,
-                      },
-                    }}
                   />
                 </Box>
                 <Field.HelperText>

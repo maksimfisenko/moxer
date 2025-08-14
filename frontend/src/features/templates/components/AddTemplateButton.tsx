@@ -2,17 +2,17 @@ import { IconButton } from "@chakra-ui/react";
 import { LuCirclePlus } from "react-icons/lu";
 
 interface AddTemplateButtonProps {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddTemplateButton = ({ setOpen }: AddTemplateButtonProps) => {
+const AddTemplateButton = ({ setDrawerOpen }: AddTemplateButtonProps) => {
   return (
     <IconButton
       size={"xs"}
       colorPalette={"green"}
       rounded={"md"}
       variant={"surface"}
-      onClick={() => setOpen(true)}
+      onClick={() => setDrawerOpen(true)}
     >
       <LuCirclePlus />
     </IconButton>

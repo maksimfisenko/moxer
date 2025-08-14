@@ -5,7 +5,9 @@ import { useState } from "react";
 import type { Template } from "../types/types";
 
 const Content = () => {
-  const [template, setTemplate] = useState<Template | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
+    null
+  );
 
   return (
     <Flex
@@ -19,8 +21,11 @@ const Content = () => {
       mt={2}
       mb={4}
     >
-      <TemplatesListContainer template={template} setTemplate={setTemplate} />
-      <TemplatePreview template={template} />
+      <TemplatesListContainer
+        selectedTemplate={selectedTemplate}
+        setSelectedTemplate={setSelectedTemplate}
+      />
+      <TemplatePreview selectedTemplate={selectedTemplate} />
     </Flex>
   );
 };

@@ -3,13 +3,13 @@ import { useGetTemplates } from "../hooks/use-get-templates";
 import type { Template } from "../types/types";
 
 interface TemplatesListProps {
-  selectedTempl: Template | null;
-  setSelectedTempl: React.Dispatch<React.SetStateAction<Template | null>>;
+  selectedTemplate: Template | null;
+  setSelectedTemplate: React.Dispatch<React.SetStateAction<Template | null>>;
 }
 
 const TemplatesList = ({
-  selectedTempl,
-  setSelectedTempl,
+  selectedTemplate,
+  setSelectedTemplate,
 }: TemplatesListProps) => {
   const { data, isLoading, isError, error } = useGetTemplates();
 
@@ -25,9 +25,9 @@ const TemplatesList = ({
           p={2}
           cursor={"pointer"}
           _hover={{ bg: "gray.50" }}
-          bg={selectedTempl?.id === templ.id ? "gray.100" : "transparent"}
+          bg={selectedTemplate?.id === templ.id ? "gray.100" : "transparent"}
           rounded={"md"}
-          onClick={() => setSelectedTempl(templ)}
+          onClick={() => setSelectedTemplate(templ)}
         >
           {templ.name}
         </Box>

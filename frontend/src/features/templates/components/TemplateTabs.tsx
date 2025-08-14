@@ -1,21 +1,32 @@
 import { Tabs } from "@chakra-ui/react";
-import type { GeneratedData, TemplateContent } from "../types/types";
+import type { GeneratedData, Template } from "../types/types";
 import GeneratedDataPreview from "./GeneratedDataPreview";
-import JsonPreview from "./JsonView";
+import ContentPreview from "./ContentPreview";
+import { useEffect, useState } from "react";
 
 interface TemplateTabsProps {
-  content: TemplateContent;
+  selectedTemplate: Template;
   generatedData?: GeneratedData;
 }
 
-const TemplateTabs = ({ content, generatedData }: TemplateTabsProps) => {
+const TemplateTabs = ({
+  selectedTemplate,
+  generatedData,
+}: TemplateTabsProps) => {
+  const [activeTab, setActiveTab] = useState<string>("template");
+
+  useEffect(() => {
+    setActiveTab("template");
+  }, [selectedTemplate]);
+
   return (
     <Tabs.Root
       flex={1}
       flexDirection={"column"}
       display={"flex"}
-      defaultValue="template"
       variant={"enclosed"}
+      value={activeTab}
+      onValueChange={(e) => setActiveTab(e.value)}
     >
       <Tabs.List>
         <Tabs.Trigger value="template">Template</Tabs.Trigger>
@@ -28,7 +39,7 @@ const TemplateTabs = ({ content, generatedData }: TemplateTabsProps) => {
         flex={1}
         flexDirection={"column"}
       >
-        <JsonPreview content={content} />
+        <ContentPreview content={selectedTemplate.content} />
       </Tabs.Content>
       <Tabs.Content
         value="data"

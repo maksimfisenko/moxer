@@ -6,15 +6,15 @@ import { useState } from "react";
 import MyTemplatesContainer from "./MyTemplatesContainer";
 
 interface TemplatesListContainerProps {
-  template: Template | null;
-  setTemplate: React.Dispatch<React.SetStateAction<Template | null>>;
+  selectedTemplate: Template | null;
+  setSelectedTemplate: React.Dispatch<React.SetStateAction<Template | null>>;
 }
 
 const TemplatesListContainer = ({
-  template,
-  setTemplate,
+  selectedTemplate,
+  setSelectedTemplate,
 }: TemplatesListContainerProps) => {
-  const [open, setOpen] = useState(false);
+  const [drawerIsOpen, setDrawerOpen] = useState(false);
 
   return (
     <VStack
@@ -24,9 +24,15 @@ const TemplatesListContainer = ({
       borderRight={"2px solid"}
       borderColor={"gray.200"}
     >
-      <MyTemplatesContainer open={open} setOpen={setOpen} />
+      <MyTemplatesContainer
+        drawerIsOpen={drawerIsOpen}
+        setDrawerOpen={setDrawerOpen}
+      />
       <Separator />
-      <TemplatesList selectedTempl={template} setSelectedTempl={setTemplate} />
+      <TemplatesList
+        selectedTemplate={selectedTemplate}
+        setSelectedTemplate={setSelectedTemplate}
+      />
     </VStack>
   );
 };
