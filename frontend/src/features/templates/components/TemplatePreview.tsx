@@ -28,7 +28,6 @@ const TemplatePreview = ({ template }: TemplatePreviewProps) => {
       },
       {
         onSuccess: (data) => {
-          console.log(data.data);
           setData(data);
         },
         onError: (error: AxiosError<AxiosErrorResponseData>) => {

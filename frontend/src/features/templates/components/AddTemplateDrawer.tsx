@@ -49,7 +49,7 @@ const AddTemplateDrawer = ({ open, setOpen }: AddTemplateDrawerProps) => {
         <Portal>
           <Drawer.Backdrop />
           <Drawer.Positioner>
-            <Drawer.Content>
+            <Drawer.Content bgColor={"gray.100"}>
               <Drawer.Body>
                 <AddTemplateForm
                   onFormSubmit={handleCreateTemplate}

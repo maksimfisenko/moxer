@@ -14,6 +14,15 @@ import z from "zod";
 import type { CreateTemplateRequest } from "../types/types";
 import MonacoEditor from "react-monaco-editor";
 import * as monaco from "monaco-editor";
+import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
+
+self.MonacoEnvironment = {
+  getWorker(_: any, __: any) {
+    return new jsonWorker();
+  },
+};
+
+monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
 
 monaco.editor.defineTheme("customGray", {
   base: "vs",
@@ -70,7 +79,6 @@ const AddTemplateForm = ({ isLoading, onFormSubmit }: AddTemplateFormProps) => {
         height={"100%"}
         align={"center"}
         justify={"center"}
-        backgroundColor={"gray.100"}
       >
         <form onSubmit={handleSubmit(onFormSubmit)}>
           <Fieldset.Root

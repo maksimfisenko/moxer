@@ -8,13 +8,11 @@ const Socials = () => {
       <Link href="https://github.com/maksimfisenko/moxer" target="_blank">
         <LuGithub />
       </Link>
-      <Link>
-        <SocialIcon
-          target="_blank"
-          url="https://t.me/maximfisenko"
-          style={{ height: "20px", width: "20px" }}
-        />
-      </Link>
+      <SocialIcon
+        target="_blank"
+        url="https://t.me/maximfisenko"
+        style={{ height: "20px", width: "20px" }}
+      />
     </>
   );
 };
