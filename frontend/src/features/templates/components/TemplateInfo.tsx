@@ -1,5 +1,5 @@
-import { DataList } from "@chakra-ui/react";
-import type { Template } from "../types/types";
+import { Heading, HStack } from "@chakra-ui/react";
+import type { Template } from "../types/templatesTypes";
 
 interface TemplateInfoProps {
   selectedTemplate: Template;
@@ -7,21 +7,9 @@ interface TemplateInfoProps {
 
 const TemplateInfo = ({ selectedTemplate }: TemplateInfoProps) => {
   return (
-    <DataList.Root orientation={"horizontal"}>
-      <DataList.Item>
-        <DataList.ItemLabel>Created at</DataList.ItemLabel>
-        <DataList.ItemValue>
-          {selectedTemplate.created_at.toLocaleString("ru-RU")}
-        </DataList.ItemValue>
-      </DataList.Item>
-
-      <DataList.Item>
-        <DataList.ItemLabel>Updated at</DataList.ItemLabel>
-        <DataList.ItemValue>
-          {selectedTemplate.updated_at.toLocaleString("ru-RU")}
-        </DataList.ItemValue>
-      </DataList.Item>
-    </DataList.Root>
+    <HStack justify={"space-between"}>
+      <Heading size={"xl"}>{selectedTemplate.name}</Heading>
+    </HStack>
   );
 };
 

@@ -8,12 +8,13 @@ interface AddTemplateButtonProps {
 const AddTemplateButton = ({ setDrawerOpen }: AddTemplateButtonProps) => {
   return (
     <IconButton
-      size={"xs"}
+      size={"md"}
       colorPalette={"green"}
       rounded={"md"}
       variant={"surface"}
       onClick={() => setDrawerOpen(true)}
     >
+      Add a new template
       <LuCirclePlus />
     </IconButton>
   );

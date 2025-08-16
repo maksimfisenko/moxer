@@ -1,8 +1,8 @@
 import { Flex } from "@chakra-ui/react";
-import TemplatesListContainer from "./TemplatesListContainer";
-import TemplatePreview from "./TemplatePreview";
 import { useState } from "react";
-import type { Template } from "../types/types";
+import type { Template } from "../types/templatesTypes";
+import TemplatesPanel from "./panels/TemplatesPanel";
+import TemplatePanel from "./panels/TemplatePanel";
 
 const Content = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
@@ -12,6 +12,7 @@ const Content = () => {
   return (
     <Flex
       flex={1}
+      h={"100%"}
       p={4}
       bgColor={"white"}
       w={"80%"}
@@ -21,11 +22,11 @@ const Content = () => {
       mt={2}
       mb={4}
     >
-      <TemplatesListContainer
+      <TemplatesPanel
         selectedTemplate={selectedTemplate}
         setSelectedTemplate={setSelectedTemplate}
       />
-      <TemplatePreview selectedTemplate={selectedTemplate} />
+      <TemplatePanel selectedTemplate={selectedTemplate} />
     </Flex>
   );
 };

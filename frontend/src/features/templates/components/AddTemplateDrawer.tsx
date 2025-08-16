@@ -1,12 +1,12 @@
 import { CloseButton, Drawer, Portal } from "@chakra-ui/react";
-import AddTemplateForm from "./AddTemplateForm";
-import { useCreateTemplate } from "../hooks/use-create-template";
-import type { CreateTemplateRequest } from "../types/types";
-import { toaster, Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/toaster";
 import { useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import type { AxiosErrorResponseData } from "@/types/types";
-import { getFullErrorMessage } from "@/utils/utils";
+import { useCreateTemplate } from "../hooks/useCreateTemplate";
+import type { CreateTemplateRequest } from "../types/templatesTypes";
+import AddTemplateForm from "../forms/AddTemplateForm";
+import { showErrorToast, showSuccessToast } from "@/shared/lib/toaster";
+import { getApiErrorMessage } from "@/shared/lib/apiErrors";
 
 interface AddTemplateDrawerProps {
   isOpen: boolean;
@@ -20,20 +20,12 @@ const AddTemplateDrawer = ({ isOpen, setOpen }: AddTemplateDrawerProps) => {
   const handleCreateTemplate = (req: CreateTemplateRequest) => {
     mutate(req, {
       onSuccess: () => {
-        toaster.create({
-          title: "Success",
-          description: "Successfully created a new template!",
-          type: "success",
-        });
+        showSuccessToast("Successfully created a new template!");
         queryClient.invalidateQueries({ queryKey: ["get-templates"] });
         setOpen(false);
       },
-      onError: (error: AxiosError<AxiosErrorResponseData>) => {
-        toaster.create({
-          title: "Error",
-          description: getFullErrorMessage(error.response?.data?.message),
-          type: "error",
-        });
+      onError: (error: AxiosError<any>) => {
+        showErrorToast(getApiErrorMessage(error));
       },
     });
   };
@@ -49,7 +41,7 @@ const AddTemplateDrawer = ({ isOpen, setOpen }: AddTemplateDrawerProps) => {
         <Portal>
           <Drawer.Backdrop />
           <Drawer.Positioner>
-            <Drawer.Content bgColor={"gray.100"}>
+            <Drawer.Content bgColor={"blue.50"}>
               <Drawer.Body>
                 <AddTemplateForm
                   onFormSubmit={handleCreateTemplate}

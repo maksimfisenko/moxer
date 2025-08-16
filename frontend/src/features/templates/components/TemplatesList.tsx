@@ -1,9 +1,9 @@
-import { useGetTemplates } from "../hooks/use-get-templates";
-import type { Template } from "../types/types";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/shared/components/LoadingSpinner";
 import { Box } from "@chakra-ui/react";
-import ErrorText from "@/components/ui/ErrorText";
-import AdvisoryText from "@/components/ui/AdvisoryText";
+import ErrorText from "@/shared/components/ErrorText";
+import AdvisoryText from "@/shared/components/AdvisoryText";
+import type { Template } from "../types/templatesTypes";
+import { useGetTemplates } from "../hooks/useGetTemplate";
 
 interface TemplatesListProps {
   selectedTemplate: Template | null;
@@ -34,7 +34,7 @@ const TemplatesList = ({
     );
 
   return (
-    <>
+    <Box h={"480px"} overflowY={"auto"}>
       {data.map((templ) => (
         <Box
           key={templ.id}
@@ -48,7 +48,7 @@ const TemplatesList = ({
           {templ.name}
         </Box>
       ))}
-    </>
+    </Box>
   );
 };
 
