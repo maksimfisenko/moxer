@@ -1,4 +1,4 @@
-import { Flex, Heading, Separator, Text, VStack } from "@chakra-ui/react";
+import { Heading, Separator, VStack } from "@chakra-ui/react";
 import type {
   GeneratedData,
   GenerateDataRequest,
@@ -11,6 +11,7 @@ import { useGenerateData } from "../hooks/use-generate-data";
 import type { AxiosError } from "axios";
 import type { AxiosErrorResponseData } from "@/types/types";
 import { useEffect, useState } from "react";
+import AdvisoryText from "@/components/ui/AdvisoryText";
 
 interface TemplatePreviewProps {
   selectedTemplate: Template | null;
@@ -66,11 +67,7 @@ const TemplatePreview = ({ selectedTemplate }: TemplatePreviewProps) => {
           )}
         </>
       ) : (
-        <Flex flex={1} align={"center"} justify={"center"} h="100%">
-          <Text flex={1} fontSize={"xl"} textAlign={"center"} maxW={"80%"}>
-            Choose the template from the left panel or create a new one
-          </Text>
-        </Flex>
+        <AdvisoryText message="Choose the template from the left panel or create a new one." />
       )}
     </VStack>
   );

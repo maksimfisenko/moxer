@@ -23,7 +23,7 @@ const GeneratedDataPreview = ({ data }: GeneratedDataPreviewProps) => {
       overflowY={"auto"}
     >
       <Json
-        height={"100%"}
+        height={"345px"}
         readOnly={true}
         value={data ? JSON.stringify(data?.data, null, 4) : ""}
       />

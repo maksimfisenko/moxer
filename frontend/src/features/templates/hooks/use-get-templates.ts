@@ -15,6 +15,7 @@ const useGetTemplates = () => {
         updated_at: new Date(t.updated_at),
       }));
     },
+    retry: 0,
   });
 };
 

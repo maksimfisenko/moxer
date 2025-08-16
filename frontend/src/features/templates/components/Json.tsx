@@ -15,7 +15,7 @@ monaco.editor.defineTheme("customGray", {
   inherit: true,
   rules: [],
   colors: {
-    "editor.background": "#f4f4f5",
+    "editor.background": "#000000",
     "editor.lineHighlightBorder": "#f4f4f5",
     "editor.lineHighlightBackground": "#f4f4f5",
   },
