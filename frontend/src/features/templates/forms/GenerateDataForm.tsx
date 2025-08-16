@@ -32,7 +32,7 @@ const GenerateDataForm = ({
       justify={"center"}
       border={"1px solid gray"}
       rounded={"lg"}
-      width={"30%"}
+      flex={2}
     >
       <Fieldset.Root size={"lg"} w="sm" p={4} rounded={"lg"}>
         <form onSubmit={handleSubmit(onFormSubmit)}>
