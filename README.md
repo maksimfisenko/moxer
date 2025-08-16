@@ -10,7 +10,7 @@ Great for:
 
 ## :sparkles: Features
 
-- :bust_in_silhouette: Register and login in as a user
+- :bust_in_silhouette: Register and log in as a user
 - :page_facing_up: Create and save custom JSON templates with variables like `{{email}}`, `{{uuid}}`, etc.
 - :books: Generate mock data from saved templates
 - :open_file_folder: View your saved templates
@@ -24,6 +24,36 @@ Great for:
 - :test_tube: Unit tests using [Testify](https://github.com/stretchr/testify)
 - :books: API documentation powered by [swaggo/swag](https://github.com/swaggo/swag)
 - :game_die: Mock data generation via [Gofakeit](https://github.com/brianvoe/gofakeit)
+- :computer: Frontend with **React + Vite** for improved usability
+- :whale: Start the application using `docker-compose`
+
+## :rocket: Quick Start
+
+### :whale: Docker Compose
+
+To run the project locally without manually setting up the database and dependencies:
+
+```bash
+git clone https://github.com/maksimfisenko/moxer.git
+cd moxer
+docker-compose up --build
+```
+
+- **Backend** will be available at [http://localhost:8080/](http://localhost:8080/)
+- **Frontend** will be available at [http://localhost:5173/](http://localhost:8080/)
+- **Swagger UI**: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
+
+### :mailbox_with_mail: Postman API Collection
+
+Alternatively, you can use a Postman collection and environment for testing the API easily.
+
+- :bookmark_tabs: [Postman Collection](backend/postman/moxer.postman_collection.json)
+- :world_map: [Postman Environment](backend/postman/moxer.postman_environment.json)
+
+#### :white_check_mark: How to use
+
+1. Import both collection and environment files into Postman.
+2. Send the register and then login requests. If successful, the `jwt-token` will be saved autimatically and used in the `Authorization` header for all other requests where it is needed.
 
 ## :arrow_heading_down: Example Usage
 
@@ -55,106 +85,94 @@ Moxer will output:
 
 ## :closed_lock_with_key: API Endpoints `(api/v1)`
 
-| Method |           Path            |           Description           |   Auth Required    |
-| :----: | :-----------------------: | :-----------------------------: | :----------------: |
-|  GET   |   `/swagger/index.html`   |     Swagger UI for the API      |        :x:         |
-|  GET   |        `/healthz`         |  Check availability of the app  |        :x:         |
-|  POST  |     `/auth/register`      |       Register a new user       |        :x:         |
-|  POST  |       `/auth/login`       | Authenticate user and get token |        :x:         |
-|  GET   |        `/auth/me`         |      Get current user info      | :white_check_mark: |
-|  POST  |       `/templates`        |      Create a new template      | :white_check_mark: |
-|  GET   |       `/templates`        |  Get current user's templates   | :white_check_mark: |
-|  POST  | `/templates/:id/generate` |  Generate mocks for a template  | :white_check_mark: |
+| Method |               Path                |           Description           |   Auth Required    |
+| :----: | :-------------------------------: | :-----------------------------: | :----------------: |
+|  GET   |       `/swagger/index.html`       |     Swagger UI for the API      |        :x:         |
+|  GET   |         `/public/healthz`         |  Check availability of the app  |        :x:         |
+|  POST  |      `/public/auth/register`      |       Register a new user       |        :x:         |
+|  POST  |       `/public/auth/login`        | Authenticate user and get token |        :x:         |
+|  GET   |        `/private/auth/me`         |      Get current user info      | :white_check_mark: |
+|  POST  |       `/private/templates`        |      Create a new template      | :white_check_mark: |
+|  GET   |       `/private/templates`        |  Get current user's templates   | :white_check_mark: |
+|  POST  | `/private/templates/:id/generate` |  Generate mocks for a template  | :white_check_mark: |
 
-## :sparkles: Supported Template Variables
+## :dizzy: Supported Template Variables
 
 ### Misc
 
-| Variable |   Description    |                Example                 |
-| :------: | :--------------: | :------------------------------------: |
-| `{uuid}` | Random UUID (v4) | `682fb1f6-d93f-4a6d-91b4-f300ea71ae7d` |
-| `{bool}` |  Random boolean  |           `true` or `false`            |
+|  Variable  |   Description    |                Example                 |
+| :--------: | :--------------: | :------------------------------------: |
+| `{{uuid}}` | Random UUID (v4) | `682fb1f6-d93f-4a6d-91b4-f300ea71ae7d` |
+| `{{bool}}` |  Random boolean  |           `true` or `false`            |
 
 ### Person
 
-|    Variable     |         Description         |          Example           |
-| :-------------: | :-------------------------: | :------------------------: |
-|    `{name}`     |      Random full name       |      `Leopold Hansen`      |
-| `{first_name}`  |      Random first name      |          `Jacey`           |
-| `{middle_name}` |     Random middle name      |        `Guillermo`         |
-|  `{last_name}`  |      Random last name       |         `Jacobson`         |
-|    `{phone}`    |     Random phone number     |        `9164607404`        |
-|    `{email}`    |    Random email address     | `athanrath@bechtelar.info` |
-|  `{username}`   |       Random username       |       `Smitham7869`        |
-|  `{password}`   | Random password of length 8 |         `VUpCsp3M`         |
-|   `{gender}`    |        Random gender        |     `male` or `female`     |
+|     Variable      |         Description         |          Example           |
+| :---------------: | :-------------------------: | :------------------------: |
+|    `{{name}}`     |      Random full name       |      `Leopold Hansen`      |
+| `{{first_name}}`  |      Random first name      |          `Jacey`           |
+| `{{middle_name}}` |     Random middle name      |        `Guillermo`         |
+|  `{{last_name}}`  |      Random last name       |         `Jacobson`         |
+|    `{{phone}}`    |     Random phone number     |        `9164607404`        |
+|    `{{email}}`    |    Random email address     | `athanrath@bechtelar.info` |
+|  `{{username}}`   |       Random username       |       `Smitham7869`        |
+|  `{{password}}`   | Random password of length 8 |         `VUpCsp3M`         |
+|   `{{gender}}`    |        Random gender        |     `male` or `female`     |
 
 ### Address
 
-|    Variable    |    Description    |       Example       |
-| :------------: | :---------------: | :-----------------: |
-|  `{country}`   |  Random country   |       `Spain`       |
-|    `{city}`    |    Random city    |      `Chicago`      |
-|   `{street}`   |   Random street   | `9961 West Rowland` |
-|    `{zip}`     |  Random zip code  |       `95183`       |
-|  `{latitude}`  |  Random latitude  |     `31.617583`     |
-| `{longtitude}` | Random longtitude |     `75.031913`     |
+|     Variable     |    Description    |       Example       |
+| :--------------: | :---------------: | :-----------------: |
+|  `{{country}}`   |  Random country   |       `Spain`       |
+|    `{{city}}`    |    Random city    |      `Chicago`      |
+|   `{{street}}`   |   Random street   | `9961 West Rowland` |
+|    `{{zip}}`     |  Random zip code  |       `95183`       |
+|  `{{latitude}}`  |  Random latitude  |     `31.617583`     |
+| `{{longtitude}}` | Random longtitude |     `75.031913`     |
 
 ### Words
 
-|    Variable     |    Description     |                         Example                         |
-| :-------------: | :----------------: | :-----------------------------------------------------: |
-|    `{word}`     |    Random word     |                        `though`                         |
-|    `{noun}`     |    Random noun     |                         `crowd`                         |
-|    `{verb}`     |    Random verb     |                         `wash`                          |
-|   `{adverb}`    |   Random adverb    |                        `clearly`                        |
-| `{preposition}` | Random preposition |                      `opposite to`                      |
-|  `{adjective}`  |  Random adjective  |                        `sparse`                         |
-|   `{phrase}`    |   Random phrase    |                  `you had to be there`                  |
-|  `{question}`   |  Random question   | `Kale chips mlkshk mustache butcher shabby chic tacos?` |
+|     Variable      |    Description     |                         Example                         |
+| :---------------: | :----------------: | :-----------------------------------------------------: |
+|    `{{word}}`     |    Random word     |                        `though`                         |
+|    `{{noun}}`     |    Random noun     |                         `crowd`                         |
+|    `{{verb}}`     |    Random verb     |                         `wash`                          |
+|   `{{adverb}}`    |   Random adverb    |                        `clearly`                        |
+| `{{preposition}}` | Random preposition |                      `opposite to`                      |
+|  `{{adjective}}`  |  Random adjective  |                        `sparse`                         |
+|   `{{phrase}}`    |   Random phrase    |                  `you had to be there`                  |
+|  `{{question}}`   |  Random question   | `Kale chips mlkshk mustache butcher shabby chic tacos?` |
 
 ### Colors
 
-| Variable  |       Description        |  Example  |
-| :-------: | :----------------------: | :-------: |
-| `{color}` |       Random color       |  `White`  |
-|  `{hex}`  | Random hexadecimal color | `#680da6` |
+|  Variable   |       Description        |  Example  |
+| :---------: | :----------------------: | :-------: |
+| `{{color}}` |       Random color       |  `White`  |
+|  `{{hex}}`  | Random hexadecimal color | `#680da6` |
 
 ### Internet
 
-|     Variable      |         Description         |                  Example                  |
-| :---------------: | :-------------------------: | :---------------------------------------: |
-|      `{url}`      |         Random URL          | `http://www.productvirtual.name/generate` |
-|  `{domain_name}`  |     Random domain name      |            `futureglobal.info`            |
-| `{domain_suffix}` |    Random domain suffix     |                   `org`                   |
-|     `{ipv4}`      | Random version 4 IP address |              `227.44.58.21`               |
-|     `{ipv6}`      | Random version 6 IP address | `10da:dd53:10af:49a5:f108:cbcb:8df7:d672` |
+|      Variable       |         Description         |                  Example                  |
+| :-----------------: | :-------------------------: | :---------------------------------------: |
+|      `{{url}}`      |         Random URL          | `http://www.productvirtual.name/generate` |
+|  `{{domain_name}}`  |     Random domain name      |            `futureglobal.info`            |
+| `{{domain_suffix}}` |    Random domain suffix     |                   `org`                   |
+|     `{{ipv4}}`      | Random version 4 IP address |              `227.44.58.21`               |
+|     `{{ipv6}}`      | Random version 6 IP address | `10da:dd53:10af:49a5:f108:cbcb:8df7:d672` |
 
 ### Date/Time
 
-|    Variable     |                Description                |                           Example                            |
-| :-------------: | :---------------------------------------: | :----------------------------------------------------------: |
-|    `{date}`     |                Random date                |          `1915-09-16 08:38:40.340355206 +0000 UTC`           |
-|  `{past_date}`  |             Random past date              | `2025-08-13 04:07:27.273437073 +0300 MSK m=-40484.952189785` |
-| `{future_date}` |            Random future date             | `2025-08-13 18:07:27.273359687 +0300 MSK m=+9915.047733388`  |
-|    `{year}`     | Random year between 1900 and current year |                            `1959`                            |
-|    `{month}`    |        Random month ordinal number        |                             `8`                              |
-|   `{weekday}`   |              Random weekday               |                           `Monday`                           |
-|    `{hour}`     |                Random hour                |                             `6`                              |
-|   `{minute}`    |               Random minute               |                             `16`                             |
-|   `{second}`    |               Random second               |                             `18`                             |
-
-## :mailbox_with_mail: Postman API Collection
-
-This project includes a Postman collection and environment for testing the API easily.
-
-- :bookmark_tabs: [Postman Collection](backend/postman/moxer.postman_collection.json)
-- :world_map: [Postman Environment](backend/postman/moxer.postman_environment.json)
-
-### :white_check_mark: How to use
-
-1. Import both collection and environment files into Postman.
-2. Send the register and then login requests. If successful, the `jwt-token` will be saved autimatically and used in the `Authorization` header for all other requests where it is needed.
+|     Variable      |                Description                |                           Example                            |
+| :---------------: | :---------------------------------------: | :----------------------------------------------------------: |
+|    `{{date}}`     |                Random date                |          `1915-09-16 08:38:40.340355206 +0000 UTC`           |
+|  `{{past_date}}`  |             Random past date              | `2025-08-13 04:07:27.273437073 +0300 MSK m=-40484.952189785` |
+| `{{future_date}}` |            Random future date             | `2025-08-13 18:07:27.273359687 +0300 MSK m=+9915.047733388`  |
+|    `{{year}}`     | Random year between 1900 and current year |                            `1959`                            |
+|    `{{month}}`    |        Random month ordinal number        |                             `8`                              |
+|   `{{weekday}}`   |              Random weekday               |                           `Monday`                           |
+|    `{{hour}}`     |                Random hour                |                             `6`                              |
+|   `{{minute}}`    |               Random minute               |                             `16`                             |
+|   `{{second}}`    |               Random second               |                             `18`                             |
 
 ## :package: Dependencies
 
