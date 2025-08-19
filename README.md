@@ -1,4 +1,4 @@
-# Moxer [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+# Moxer – Mock Data Generator [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Moxer** is a lightweight mock data generator that lets you define JSON templates with placeholders (e.g., `{{email}}`, `{{uuid}}`) and generates realistic fake data for development and testing.
 
